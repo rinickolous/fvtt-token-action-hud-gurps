@@ -1,28 +1,26 @@
 {
-  "id": "token-action-hud-template",
-  "title": "Token Action HUD Template",
+  "id": "token-action-hud-gurps",
+  "title": "Token Action HUD GURPS",
   "description": "Token Action HUD is a repositionable HUD of actions for a selected token",
   "authors": [
     {
-      "name": "Larkinabout",
-      "url": "https://github.com/Larkinabout"
+      "name": "Mikolaj Tomczynski",
+      "email": "mikolaj@tomczynski.org",
+      "url": "https://github.com/rinickolous",
+      "discord": "sasiedny"
     }
   ],
   "url": "This is auto replaced",
   "flags": {},
   "version": "This is auto replaced",
   "compatibility": {
-    "minimum": "11",
-    "verified": "11.313"
+    "minimum": "12",
+    "maximum": "13",
+    "verified": "13.344"
   },
-  "esmodules": [
-    "./scripts/init.js"
-  ],
-  "scripts": [
-  ],
-  "styles": [
-    "./styles/tah-template-style.css"
-  ],
+  "esmodules": ["./scripts/init.js"],
+  "scripts": [],
+  "styles": ["./styles/tah-gurps.css"],
   "languages": [
     {
       "lang": "en",
@@ -34,12 +32,12 @@
   "relationships": {
     "systems": [
       {
-        "id": "template",
-        "type": "system",
+        "id": "gurps",
         "compatibility": [
           {
-            "minimum": "1.0.0",
-            "verified": "1.0.0"
+            "minimum": "0.18.1",
+            "maximum": "0.18.99",
+            "verified": "0.18.1"
           }
         ]
       }
@@ -50,9 +48,9 @@
         "type": "module",
         "compatibility": [
           {
-            "minimum": "1.5.0",
-            "maximum": "1.5",
-            "verified": "1.5.0"
+            "minimum": "2.0.13",
+            "maximum": "2.0.99",
+            "verified": "2.0.13"
           }
         ]
       }
@@ -65,7 +63,7 @@
   "socket": false,
   "manifest": "This is auto replaced",
   "download": "This is auto replaced",
-  "readme": "https://github.com/Larkinabout/fvtt-token-action-hud-template#readme",
+  "readme": "https://github.com/rinickolous/fvtt-token-action-hud-gurps#readme",
   "protected": false,
   "coreTranslation": false,
   "library": false

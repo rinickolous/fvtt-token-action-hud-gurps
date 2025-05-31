@@ -1,20 +1,27 @@
 {
   "tokenActionHud": {
-    "template": {
-      "armor": "Armor",
-      "containers": "Containers",
-      "consumables": "Consumables",
-      "equipment": "Equipment",
-      "inventory": "Inventory",
-      "item": "Item",
-      "weapons": "Weapons",
-      "treasure": "Treasure",
-      "settings": {
-        "displayUnequipped": {
-          "hint": "Choose whether to display unequipped items on the HUD",
-          "name": "Display Unequipped"
-        }
-      }
+    "gurps": {
+      "attribute": "Attribute",
+      "otf": "OTF",
+      "attributes": "Attributes",
+      "poolModifiers": "Pool Attributes",
+      "reactions": "Reactions",
+      "conditionalModifiers": "Conditional Modifiers",
+      "defenses": "Defenses",
+      "melee": "Melee",
+      "ranged": "Ranged",
+      "skills": "Skills",
+      "spells": "Spells",
+      "traits": "Traits",
+      "maneuvers": "Maneuvers",
+      "posture": "Posture",
+      "attack": "Attack",
+      "parry": "Parry",
+      "block": "Block",
+      "damage": "Damage",
+      "acc": "Acc",
+      "bulk": "Bulk"
     }
   }
 }
+

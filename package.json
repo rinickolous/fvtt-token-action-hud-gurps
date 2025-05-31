@@ -1,4 +1,16 @@
 {
+  "name": "token-action-hud-gurps",
+  "license": "GPL-3.0-or-later",
+  "author": "Mikolaj Tomczynski",
+  "version": "1.0.0",
+  "description": "Token Action HUD is a repositionable HUD of actions for a selected token.",
+  "bugs": {
+    "url": "https://github.com/rinickolous/token-action-hud-gurps/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rinickolous/token-action-hud-gurps.git"
+  },
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -wcm"
@@ -10,6 +22,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-promise": "^6.1.0",
+    "prettier": "^3.5.3",
     "rollup": "^2.56.3",
     "rollup-plugin-terser": "^7.0.2"
   }
