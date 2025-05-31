@@ -1,4 +1,5 @@
-![Downloads](https://img.shields.io/github/downloads/Larkinabout/fvtt-token-action-hud-template/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ftoken-action-hud-template&colorB=448d34&style=for-the-badge)](https://forge-vtt.com/bazaar#package=token-action-hud-template)
+![Downloads](https://img.shields.io/github/downloads/rinickolous/fvtt-token-action-hud-gurps/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ftoken-action-hud-gurps&colorB=448d34&style=for-the-badge)](https://forge-vtt.com/bazaar#package=token-action-hud-gurps)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # Token Action HUD Template
 
@@ -18,13 +19,13 @@ Token Action HUD is a repositionable HUD of actions for a selected token.
 ## Method 1
 1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
 2. Click **Install Module**
-3. Search for **Token Action HUD Pathfinder 2** 
+3. Search for **Token Action HUD GURPS** 
 4. Click **Install** next to the module listing
 
 ## Method 2
 1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
 2. Click **Install Module**
-3. In the Manifest URL field, paste: `https://github.com/Larkinabout/fvtt-token-action-hud-template/releases/latest/download/module.json`
+3. In the Manifest URL field, paste: `https://github.com/rinickolous/fvtt-token-action-hud-gurps/releases/latest/download/module.json`
 4. Click **Install** next to the pasted Manifest URL
 
 ## Required Modules
@@ -48,4 +49,4 @@ Thank you to the Community Helpers on Foundry's Discord who provide tireless sup
 
 # License
 
-This Foundry VTT module is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/) and this work is licensed under [Foundry Virtual Tabletop EULA - Limited License Agreement for module development](https://foundryvtt.com/article/license/).
+This Foundry VTT module is licensed under a GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details and this work is licensed under [Foundry Virtual Tabletop EULA - Limited License Agreement for module development](https://foundryvtt.com/article/license/).
