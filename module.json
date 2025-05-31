@@ -18,7 +18,7 @@
     "maximum": "13",
     "verified": "13.344"
   },
-  "esmodules": ["./scripts/init.js"],
+  "esmodules": ["./scripts/token-action-hud-template.min.js"],
   "scripts": [],
   "styles": ["./styles/tah-gurps.css"],
   "languages": [

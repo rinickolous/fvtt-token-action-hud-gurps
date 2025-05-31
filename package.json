@@ -1,5 +1,6 @@
 {
   "name": "token-action-hud-gurps",
+  "tpype": "module",
   "license": "GPL-3.0-or-later",
   "author": "Mikolaj Tomczynski",
   "version": "1.0.0",
@@ -16,14 +17,16 @@
     "dev": "rollup -wcm"
   },
   "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/eslint-parser": "^7.27.1",
     "@rollup/plugin-multi-entry": "^6.0.0",
+    "@rollup/plugin-terser": "^0.4.4",
     "eslint": "^8.25.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-promise": "^6.1.0",
     "prettier": "^3.5.3",
-    "rollup": "^2.56.3",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup": "^2.56.3"
   }
 }
