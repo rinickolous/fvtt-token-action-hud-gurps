@@ -1,5 +1,6 @@
-![Downloads](https://img.shields.io/github/downloads/rinickolous/fvtt-token-action-hud-gurps/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ftoken-action-hud-gurps&colorB=448d34&style=for-the-badge)](https://forge-vtt.com/bazaar#package=token-action-hud-gurps)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Downloads](https://img.shields.io/github/downloads/rinickolous/fvtt-token-action-hud-gurps/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
+[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ftoken-action-hud-gurps&colorB=448d34&style=for-the-badge)](https://forge-vtt.com/bazaar#package=token-action-hud-gurps)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
 
 # Token Action HUD Template
 
