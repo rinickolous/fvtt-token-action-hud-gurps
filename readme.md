@@ -2,13 +2,14 @@
 [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ftoken-action-hud-gurps&colorB=448d34&style=for-the-badge)](https://forge-vtt.com/bazaar#package=token-action-hud-gurps)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
 
-# Token Action HUD Template
+# Token Action HUD GURPS
 
 Token Action HUD is a repositionable HUD of actions for a selected token.
 
 ![Token Action HUD](.github/readme/token-action-hud.gif)
 
 # Features
+
 - Make rolls directly from the HUD instead of opening your character sheet.
 - Use items from the HUD or right-click an item to open its sheet.
 - Move the HUD and choose to expand the menus up or down.
@@ -18,12 +19,14 @@ Token Action HUD is a repositionable HUD of actions for a selected token.
 # Installation
 
 ## Method 1
+
 1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
 2. Click **Install Module**
-3. Search for **Token Action HUD GURPS** 
+3. Search for **Token Action HUD GURPS**
 4. Click **Install** next to the module listing
 
 ## Method 2
+
 1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
 2. Click **Install Module**
 3. In the Manifest URL field, paste: `https://github.com/rinickolous/fvtt-token-action-hud-gurps/releases/latest/download/module.json`
@@ -31,9 +34,10 @@ Token Action HUD is a repositionable HUD of actions for a selected token.
 
 ## Required Modules
 
-**IMPORTANT** - Token Action HUD Template requires the [Token Action HUD Core](https://foundryvtt.com/packages/token-action-hud-core) module to be installed.
+**IMPORTANT** - Token Action HUD GURPS requires the [Token Action HUD Core](https://foundryvtt.com/packages/token-action-hud-core) module to be installed.
 
 ## Recommended Modules
+
 Token Action HUD uses the [Color Picker](https://foundryvtt.com/packages/color-picker) library module for its color picker settings.
 
 # Support
