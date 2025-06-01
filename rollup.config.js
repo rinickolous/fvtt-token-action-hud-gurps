@@ -5,11 +5,11 @@ export default [
   {
     input: {
       include: ["scripts/*.js", "scripts/*/*.js"],
-      exclude: ["scripts/token-action-hud-template.min.js"],
+      exclude: ["scripts/token-action-hud-gurps.min.js"],
     },
     output: {
       format: "esm",
-      file: "scripts/token-action-hud-template.min.js",
+      file: "scripts/token-action-hud-gurps.min.js",
     },
     plugins: [terser({ keep_classnames: true, keep_fnames: true }), multi()],
   },
