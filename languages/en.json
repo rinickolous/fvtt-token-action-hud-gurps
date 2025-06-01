@@ -8,6 +8,9 @@
       "reactions": "Reactions",
       "conditionalModifiers": "Conditional Modifiers",
       "defenses": "Defenses",
+      "dodges": "Dodges",
+      "parries": "Parries",
+      "blocks": "blocks",
       "melee": "Melee",
       "ranged": "Ranged",
       "skills": "Skills",
@@ -20,8 +23,11 @@
       "block": "Block",
       "damage": "Damage",
       "acc": "Acc",
-      "bulk": "Bulk"
+      "bulk": "Bulk",
+      "dodgeRetreating": "Retreating Dodge",
+      "parryRetreating": "Retreating Parry",
+      "parryFencingRetreating": "Fencing Retreat",
+      "blockRetreating": "Retreating Block"
     }
   }
 }
-

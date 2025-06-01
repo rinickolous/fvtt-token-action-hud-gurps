@@ -79,7 +79,74 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
     /** Build defense actions
      *
      * */
-    #buildDefenseActions() {}
+    #buildDefenseActions() {
+      const actionType = ACTION_TYPE.otf
+
+      const dodges = [
+        {
+          id: "defense-dodge",
+          name: `${coreModule.api.Utils.i18n("GURPS.dodge")} (${this.actor.system.currentdodge})`,
+          encodedValue: `@${this.actor.id}@ DODGE`,
+          system: { actionType, actionId: "defense-dodge" },
+        },
+        {
+          id: "defense-retreat-dodge",
+          name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.dodgeRetreating")} (${this.actor.system.currentdodge + 3})`,
+          encodedValue: `@${this.actor.id}@ DODGE + 3 + ${coreModule.api.Utils.i18n("GURPS.modifierDodgeRetreat")}`,
+          system: { actionType, actionId: "defense-retreat-dodge" },
+        },
+      ]
+
+      this.addActions(dodges, { id: "dodges", type: "system" })
+
+      if (!!this.actor.system.equippedparry) {
+        const parries = [
+          {
+            id: "defense-parry",
+            name: `${coreModule.api.Utils.i18n("GURPS.parry")} (${this.actor.system.equippedparry})`,
+            encodedValue: `@${this.actor.id}@ PARRY`,
+            system: { actionType, actionId: "defense-parry" },
+          },
+        ]
+
+        if (!!this.actor.system.equippedparryisfencing) {
+          parries.push({
+            id: "defense-retreat-parry-fencing",
+            name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryFencingRetreating")} (${this.actor.system.equippedparry + 3})`,
+            encodedValue: `@${this.actor.id}@ PARRY + 3 + ${coreModule.api.Utils.i18n("GURPS.modifiers_.fencingRetreat")}`,
+            system: { actionType, actionId: "defense-retreat-parry" },
+          })
+        } else {
+          parries.push({
+            id: "defense-retreat-parry",
+            name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryRetreating")} (${this.actor.system.equippedparry + 1})`,
+            encodedValue: `@${this.actor.id}@ PARRY + 1 + ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
+            system: { actionType, actionId: "defense-retreat-parry" },
+          })
+        }
+
+        this.addActions(parries, { id: "parries", type: "system" })
+      }
+
+      if (!!this.actor.system.equippedblock) {
+        const blocks = [
+          {
+            id: "defense-block",
+            name: `${coreModule.api.Utils.i18n("GURPS.block")} (${this.actor.system.equippedblock})`,
+            encodedValue: `@${this.actor.id}@ BLOCK`,
+            system: { actionType, actionId: "defense-block" },
+          },
+          {
+            id: "defense-retreat-block",
+            name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.blockRetreating")} (${this.actor.system.equippedblock + 1})`,
+            encodedValue: `@${this.actor.id}@ BLOCK + 1 + ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
+            system: { actionType, actionId: "defense-retreat-block" },
+          },
+        ]
+
+        this.addActions(blocks, { id: "blocks", type: "system" })
+      }
+    }
 
     /* ---------------------------------------- */
 

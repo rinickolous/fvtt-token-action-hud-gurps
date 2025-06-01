@@ -31,6 +31,11 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
         nestId: "defenses",
         name: coreModule.api.Utils.i18n("tokenActionHud.gurps.defenses"),
         type: "system",
+        groups: [
+          { ...groups.dodges, nestId: "defenses_dodges" },
+          { ...groups.parries, nestId: "defenses_parries" },
+          { ...groups.blocks, nestId: "defenses_blocks" },
+        ],
       },
       {
         id: "melee",
