@@ -418,12 +418,12 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
      * @returns {array} The actions
      * @private
      */
-    #getActionsFromNotes(notes) {
+    #getActionsFromNotes(notes, prefix) {
       const actions = []
 
       if (notes && notes.length > 0) {
         GURPS.gurpslink(notes, false, true).forEach(action => {
-          const id = `note-${actions.length}`
+          const id = `${prefix}-note-${actions.length}`
 
           const parser = new DOMParser()
           const doc = parser.parseFromString(action.text, "text/html")
@@ -432,6 +432,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
           actions.push({
             id,
             name: text,
+            cssClass: "gurps-otf",
             encodedValue: action.action.orig,
             system: {
               actionType: ACTION_TYPE.otf,
@@ -466,7 +467,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
           this.addGroup({ id, name: e.name, type: "system" }, list)
         } else {
           const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
-          const notes = this.#getActionsFromNotes(e.notes)
+          const notes = this.#getActionsFromNotes(e.notes, `skill-${id}`)
 
           this.addActions(
             [
@@ -495,7 +496,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
       if (Object.keys(this.actor.system.ads).length === 0) return
 
       GURPS.recurselist(this.actor.system.ads, (e, k, _d) => {
-        const actions = this.#getActionsFromNotes(e.notes)
+        const actions = this.#getActionsFromNotes(e.notes, `trait-${k}`)
         if (actions.length > 0) {
           const id = `trait-${k}`
 
@@ -534,7 +535,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
           this.addGroup({ id, name: e.name, type: "system" }, list)
         } else {
           const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
-          const notes = this.#getActionsFromNotes(e.notes)
+          const notes = this.#getActionsFromNotes(e.notes, `spell-${id}`)
 
           this.addActions(
             [
@@ -562,7 +563,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
       const uncategorizedList = { id: "quickNotes_uncategorized", name: "Quick Notes", type: "system" }
       this.addGroup(uncategorizedList, rootList)
 
-      const notes = this.#getActionsFromNotes(this.actor.system.additionalresources.qnotes)
+      const notes = this.#getActionsFromNotes(this.actor.system.additionalresources.qnotes, "quickNote")
       this.addActions(notes, uncategorizedList)
     }
 
