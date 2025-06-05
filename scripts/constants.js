@@ -46,6 +46,7 @@ export const GROUP = {
   melee: { id: "melee", name: "tokenActionHud.gurps.melee", type: "system" },
   ranged: { id: "ranged", name: "tokenActionsHud.gurps.ranged", type: "system" },
   skills: { id: "skills", name: "tokenActionHud.gurps.skills", type: "system" },
+  quickNotes: { id: "quickNotes", name: "tokenActionHud.gurps.quickNotes", type: "system" },
   spells: { id: "spells", name: "tokenActionHud.gurps.spells", type: "system" },
   traits: { id: "traits", name: "tokenActionHud.gurps.traits", type: "system" },
   maneuvers: { id: "maneuvers", name: "tokenActionHud.gurps.maneuvers", type: "system" },

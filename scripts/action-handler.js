@@ -49,6 +49,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
       this.#buildSkillActions()
       this.#buildTraitActions()
       this.#buildSpellActions()
+      this.#buildQuickNoteActions()
       this.#buildManeuverActions()
       this.#buildPostureActions()
     }
@@ -417,16 +418,20 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
      * @returns {array} The actions
      * @private
      */
-    #getActionsFromNotes(item) {
+    #getActionsFromNotes(notes) {
       const actions = []
 
-      if (item.notes && item.notes.length > 0) {
-        GURPS.gurpslink(item.notes, false, true).forEach(action => {
-          const id = `${item.name}-note-${actions.length}`
+      if (notes && notes.length > 0) {
+        GURPS.gurpslink(notes, false, true).forEach(action => {
+          const id = `note-${actions.length}`
+
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(action.text, "text/html")
+          const text = doc.body.firstChild.innerText
 
           actions.push({
             id,
-            name: action.action.orig,
+            name: text,
             encodedValue: action.action.orig,
             system: {
               actionType: ACTION_TYPE.otf,
@@ -461,13 +466,13 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
           this.addGroup({ id, name: e.name, type: "system" }, list)
         } else {
           const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
-          const notes = this.#getActionsFromNotes(e)
+          const notes = this.#getActionsFromNotes(e.notes)
 
           this.addActions(
             [
               {
                 id,
-                name: e.name,
+                name: `${e.name} (${e.level})`,
                 encodedValue: `@${this.actor.id}@Sk:${e.name}`,
                 system: { actionType, actionId: id },
               },
@@ -490,7 +495,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
       if (Object.keys(this.actor.system.ads).length === 0) return
 
       GURPS.recurselist(this.actor.system.ads, (e, k, _d) => {
-        const actions = this.#getActionsFromNotes(e)
+        const actions = this.#getActionsFromNotes(e.notes)
         if (actions.length > 0) {
           const id = `trait-${k}`
 
@@ -529,13 +534,13 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
           this.addGroup({ id, name: e.name, type: "system" }, list)
         } else {
           const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
-          const notes = this.#getActionsFromNotes(e)
+          const notes = this.#getActionsFromNotes(e.notes)
 
           this.addActions(
             [
               {
                 id,
-                name: e.name,
+                name: `${e.name} (${e.level})`,
                 encodedValue: `@${this.actor.id}@Sp:${e.name}`,
                 system: { actionType, actionId: id },
               },
@@ -545,6 +550,20 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
           )
         }
       })
+    }
+
+    /* ---------------------------------------- */
+
+    /** Build skill actions
+     * @private
+     */
+    #buildQuickNoteActions() {
+      const rootList = { id: "quickNotes", type: "system" }
+      const uncategorizedList = { id: "quickNotes_uncategorized", name: "Quick Notes", type: "system" }
+      this.addGroup(uncategorizedList, rootList)
+
+      const notes = this.#getActionsFromNotes(this.actor.system.additionalresources.qnotes)
+      this.addActions(notes, uncategorizedList)
     }
 
     /* ---------------------------------------- */
