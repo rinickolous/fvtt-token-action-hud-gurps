@@ -28,7 +28,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
         this.items = items
       }
 
-      if (this.actorType === "character") {
+      if (this.actorType === "character" || this.actorType === "enemy") {
         await this.#buildCharacterActions()
       } else if (!this.actor) {
         this.#buildMultipleTokenActions()
@@ -451,21 +451,16 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
       const uncategorizedList = { id: "skills_uncategorized", name: "Uncategorized", type: "system" }
       this.addGroup(uncategorizedList, rootList)
 
-      let currentList = uncategorizedList
-      const savedLists = []
-
       if (Object.keys(this.actor.system.skills).length === 0) return
 
-      GURPS.recurselist(this.actor.system.skills, (e, k, d) => {
-        const id = `skill-${k}`
+      GURPS.recurselist(this.actor.system.skills, (e, _k, _d) => {
+        const id = e.uuid
 
         if (Object.keys(e.contains).length > 0) {
-          const list = d === 0 ? rootList : currentList
+          const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : rootList
           this.addGroup({ id, name: e.name, type: "system" }, list)
-          currentList = { id, name: e.name, type: "system" }
         } else {
-          const list = d > 0 ? currentList : uncategorizedList
-
+          const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
           const notes = this.#getActionsFromNotes(e)
 
           this.addActions(
@@ -480,9 +475,6 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
             ],
             list
           )
-          if (!savedLists.some(e => e.id === list.id)) {
-            savedLists.push(list)
-          }
         }
       })
     }
@@ -501,6 +493,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
         const actions = this.#getActionsFromNotes(e)
         if (actions.length > 0) {
           const id = `trait-${k}`
+
           this.addGroup({ id, name: e.name, type: "system" }, { id: "traits", type: "system" })
           this.addActions(
             actions.map(action => ({
@@ -526,21 +519,16 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
       const uncategorizedList = { id: "spells_uncategorized", name: "Uncategorized", type: "system" }
       this.addGroup(uncategorizedList, rootList)
 
-      let currentList = uncategorizedList
-      const savedLists = []
-
       if (Object.keys(this.actor.system.spells).length === 0) return
 
-      GURPS.recurselist(this.actor.system.spells, (e, k, d) => {
-        const id = `spell-${k}`
+      GURPS.recurselist(this.actor.system.spells, (e, _k, _d) => {
+        const id = e.uuid
 
         if (Object.keys(e.contains).length > 0) {
-          const list = d === 0 ? rootList : currentList
+          const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : rootList
           this.addGroup({ id, name: e.name, type: "system" }, list)
-          currentList = { id, name: e.name, type: "system" }
         } else {
-          const list = d > 0 ? currentList : uncategorizedList
-
+          const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
           const notes = this.#getActionsFromNotes(e)
 
           this.addActions(
@@ -555,9 +543,6 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
             ],
             list
           )
-          if (!savedLists.some(e => e.id === list.id)) {
-            savedLists.push(list)
-          }
         }
       })
     }

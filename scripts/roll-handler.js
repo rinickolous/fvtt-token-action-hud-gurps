@@ -19,7 +19,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
       const encodedValues = encodedValue?.split("|") ?? []
 
-      const knownCharacters = ["character"]
+      const knownCharacters = ["character", "enemy"]
 
       // If single actor is selected
       if (this.actor) {
