@@ -3,7 +3,7 @@
   "tpype": "module",
   "license": "GPL-3.0-or-later",
   "author": "Mikolaj Tomczynski",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Token Action HUD is a repositionable HUD of actions for a selected token.",
   "bugs": {
     "url": "https://github.com/rinickolous/token-action-hud-gurps/issues"
