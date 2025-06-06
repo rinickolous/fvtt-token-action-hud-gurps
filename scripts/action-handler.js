@@ -231,7 +231,6 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
         return acc
       }, [])
 
-      console.log("GURPS | Sense Actions", senseActions)
       this.addActions(senseActions, { id: "senses", type: "system" })
     }
 
