@@ -279,6 +279,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
           type: "system",
         }
         this.addGroup(itemGroup, { id: "melee", type: "system" })
+        const notes = this.#getActionsFromNotes(e.notes, `melee-${k}`)
 
         this.addActions(
           [
@@ -328,6 +329,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
               encodedValue: `@${this.actor.id}@D:${q + name + q}`,
               system: { actionType, actionId: `melee-${k}-damage` },
             },
+            ...notes,
           ],
           itemGroup
         )
@@ -355,6 +357,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
           type: "system",
         }
         this.addGroup(itemGroup, { id: "ranged", type: "system" })
+        const notes = this.#getActionsFromNotes(e.notes, `melee-${k}`)
 
         this.addActions(
           [
@@ -406,6 +409,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
               encodedValue: `@${this.actor.id}@D:${q + name + q}`,
               system: { actionType, actionId: `ranged-${k}-damage` },
             },
+            ...notes,
           ],
           itemGroup
         )
