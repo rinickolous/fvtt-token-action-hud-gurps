@@ -33,6 +33,7 @@ export const ACTION_TYPE = {
 export const GROUP = {
   poolModifiers: { id: "poolModifiers", name: "tokenActionHud.gurps.poolModifiers", type: "system" },
   attributes: { id: "attributes", name: "tokenActionHud.gurps.attributes", type: "system" },
+  senses: { id: "senses", name: "tokenActionHud.gurps.senses", type: "system" },
   reactions: { id: "reactions", name: "tokenActionHud.gurps.reactions", type: "system" },
   conditionalModifiers: {
     id: "conditionalModifiers",

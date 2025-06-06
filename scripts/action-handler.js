@@ -71,6 +71,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
     #buildAttributeActions() {
       this.#buildAttributeRollActions()
       this.#buildPoolModifierActions()
+      this.#buildSenseActions()
       this.#buildReactionActions()
       this.#buildConditionalModifierActions()
     }
@@ -204,6 +205,34 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
       }
 
       this.addActions(poolModifierActions, { id: "poolModifiers", type: "system" })
+    }
+
+    /* ---------------------------------------- */
+
+    #buildSenseActions() {
+      const actionType = ACTION_TYPE.otf
+
+      const senses = {
+        vision: this.actor.system.vision,
+        hearing: this.actor.system.hearing,
+        tasteSmell: this.actor.system.tastesmell,
+        touch: this.actor.system.touch,
+      }
+
+      const senseActions = Object.entries(senses).reduce((acc, [key, value]) => {
+        const name = coreModule.api.Utils.i18n("tokenActionHud.gurps." + key)
+        acc.push({
+          id: key,
+          name: `${name} (${value})`,
+          encodedValue: `@${this.actor.id}@${name}`,
+          system: { actionType, actionId: key },
+        })
+
+        return acc
+      }, [])
+
+      console.log("GURPS | Sense Actions", senseActions)
+      this.addActions(senseActions, { id: "senses", type: "system" })
     }
 
     /* ---------------------------------------- */

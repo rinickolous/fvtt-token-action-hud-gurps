@@ -22,6 +22,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
         groups: [
           { ...groups.poolModifiers, nestId: "attributes_poolModifiers" },
           { ...groups.attributes, nestId: "attributes_attributes" },
+          { ...groups.senses, nestId: "attributes_senses" },
           { ...groups.reactions, nestId: "attributes_reactions" },
           { ...groups.conditionalModifiers, nestId: "attributes_conditionalModifiers" },
         ],
