@@ -1,41 +1,41 @@
 {
-  "author": "Mikolaj Tomczynski",
-  "bugs": {
-    "url": "https://github.com/rinickolous/token-action-hud-gurps/issues"
-  },
-  "description": "Token Action HUD is a repositionable HUD of actions for a selected token.",
-  "devDependencies": {
-    "@babel/core": "^7.27.4",
-    "@babel/eslint-parser": "^7.27.1",
-    "@rollup/plugin-multi-entry": "^6.0.0",
-    "@rollup/plugin-terser": "^0.4.4",
-    "eslint": "^8.25.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.3.0",
-    "eslint-plugin-promise": "^6.1.0",
-    "fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
-    "prettier": "^3.5.3",
-    "rollup": "^2.56.3"
-  },
-  "license": "GPL-3.0-or-later",
-  "name": "token-action-hud-gurps",
-  "overrides": {
-    "fvtt-types": {
-      "tinymce": "^8.3.1"
-    },
-    "intl-messageformat-parser": "@formatjs/icu-messageformat-parser",
-    "intl-relativeformat": "@formatjs/intl-relativetimeformat"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rinickolous/token-action-hud-gurps.git"
-  },
-  "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -wcm"
-  },
-  "tpype": "module",
-  "version": "1.0.1"
+	"author": "Mikolaj Tomczynski",
+	"bugs": {
+		"url": "https://github.com/rinickolous/token-action-hud-gurps/issues"
+	},
+	"description": "Token Action HUD is a repositionable HUD of actions for a selected token.",
+	"devDependencies": {
+		"@babel/core": "^7.27.4",
+		"@babel/eslint-parser": "^7.27.1",
+		"@rollup/plugin-multi-entry": "^6.0.0",
+		"@rollup/plugin-terser": "^0.4.4",
+		"eslint": "^8.25.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-config-standard": "^17.0.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-n": "^15.3.0",
+		"eslint-plugin-promise": "^6.1.0",
+		"fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
+		"prettier": "^3.5.3",
+		"rollup": "^2.56.3"
+	},
+	"license": "GPL-3.0-or-later",
+	"name": "token-action-hud-gurps",
+	"overrides": {
+		"fvtt-types": {
+			"tinymce": "^8.3.1"
+		},
+		"intl-messageformat-parser": "@formatjs/icu-messageformat-parser",
+		"intl-relativeformat": "@formatjs/intl-relativetimeformat"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rinickolous/token-action-hud-gurps.git"
+	},
+	"scripts": {
+		"build": "rollup -c",
+		"dev": "rollup -wcm"
+	},
+	"tpype": "module",
+	"version": "1.0.1"
 }

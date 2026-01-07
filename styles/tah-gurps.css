@@ -1,8 +1,8 @@
 .gurps-otf {
-  background: rgb(255, 255, 175) !important;
+	background: rgb(255, 255, 175) !important;
 }
 
 .gurps-otf span {
-  color: black;
-  text-shadow: none;
+	color: black;
+	text-shadow: none;
 }
