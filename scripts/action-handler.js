@@ -492,6 +492,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 			if (Object.keys(this.actor.system.skills).length === 0) return
 
 			GURPS.recurselist(this.actor.system.skills, (e, _k, _d) => {
+				const q = e.name.includes('"') ? "'" : '"'
 				const id = e.uuid
 
 				if (Object.keys(e.contains).length > 0) {
@@ -506,7 +507,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 							{
 								id,
 								name: `${e.name} (${e.level})`,
-								encodedValue: `@${this.actor.id}@Sk:${e.name}`,
+								encodedValue: `@${this.actor.id}@Sk:${q + e.name + q}`,
 								system: { actionType, actionId: id },
 							},
 							...notes,
@@ -547,7 +548,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build skill actions
+		/** Build spell actions
 		 * @private
 		 */
 		#buildSpellActions() {
@@ -560,6 +561,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 			if (Object.keys(this.actor.system.spells).length === 0) return
 
 			GURPS.recurselist(this.actor.system.spells, (e, _k, _d) => {
+				const q = e.name.includes('"') ? "'" : '"'
 				const id = e.uuid
 
 				if (Object.keys(e.contains).length > 0) {
@@ -574,7 +576,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 							{
 								id,
 								name: `${e.name} (${e.level})`,
-								encodedValue: `@${this.actor.id}@Sp:${e.name}`,
+								encodedValue: `@${this.actor.id}@Sp:${q + e.name + q}`,
 								system: { actionType, actionId: id },
 							},
 							...notes,
