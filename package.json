@@ -15,19 +15,11 @@
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-n": "^15.3.0",
 		"eslint-plugin-promise": "^6.1.0",
-		"fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
 		"prettier": "^3.5.3",
 		"rollup": "^2.56.3"
 	},
 	"license": "GPL-3.0-or-later",
 	"name": "token-action-hud-gurps",
-	"overrides": {
-		"fvtt-types": {
-			"tinymce": "^8.3.1"
-		},
-		"intl-messageformat-parser": "@formatjs/icu-messageformat-parser",
-		"intl-relativeformat": "@formatjs/intl-relativetimeformat"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/rinickolous/token-action-hud-gurps.git"
