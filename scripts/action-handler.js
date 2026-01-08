@@ -94,14 +94,14 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				{
 					id: "defense-retreat-dodge",
 					name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.dodgeRetreating")} (${this.actor.system.currentdodge + 3})`,
-					encodedValue: `@${this.actor.id}@ DODGE + 3 + ${coreModule.api.Utils.i18n("GURPS.modifierDodgeRetreat")}`,
+					encodedValue: `@${this.actor.id}@ DODGE +3 ${coreModule.api.Utils.i18n("GURPS.modifiers_.dodgeRetreat")}`,
 					system: { actionType, actionId: "defense-retreat-dodge" },
 				},
 			]
 
 			this.addActions(dodges, { id: "dodges", type: "system" })
 
-			if (!!this.actor.system.equippedparry) {
+			if (this.actor.system.equippedparry) {
 				const parries = [
 					{
 						id: "defense-parry",
@@ -111,18 +111,18 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 					},
 				]
 
-				if (!!this.actor.system.equippedparryisfencing) {
+				if (this.actor.system.equippedparryisfencing) {
 					parries.push({
 						id: "defense-retreat-parry-fencing",
 						name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryFencingRetreating")} (${this.actor.system.equippedparry + 3})`,
-						encodedValue: `@${this.actor.id}@ PARRY + 3 + ${coreModule.api.Utils.i18n("GURPS.modifiers_.fencingRetreat")}`,
+						encodedValue: `@${this.actor.id}@ PARRY +3 ${coreModule.api.Utils.i18n("GURPS.modifiers_.fencingRetreat")}`,
 						system: { actionType, actionId: "defense-retreat-parry" },
 					})
 				} else {
 					parries.push({
 						id: "defense-retreat-parry",
 						name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryRetreating")} (${this.actor.system.equippedparry + 1})`,
-						encodedValue: `@${this.actor.id}@ PARRY + 1 + ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
+						encodedValue: `@${this.actor.id}@ PARRY +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
 						system: { actionType, actionId: "defense-retreat-parry" },
 					})
 				}
@@ -130,7 +130,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				this.addActions(parries, { id: "parries", type: "system" })
 			}
 
-			if (!!this.actor.system.equippedblock) {
+			if (this.actor.system.equippedblock) {
 				const blocks = [
 					{
 						id: "defense-block",
@@ -141,7 +141,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 					{
 						id: "defense-retreat-block",
 						name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.blockRetreating")} (${this.actor.system.equippedblock + 1})`,
-						encodedValue: `@${this.actor.id}@ BLOCK + 1 + ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
+						encodedValue: `@${this.actor.id}@ BLOCK +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
 						system: { actionType, actionId: "defense-retreat-block" },
 					},
 				]
@@ -314,7 +314,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 						{
 							id: `melee-${k}-attack`,
 							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.attack")} (${e.level})`,
-							encodedValue: `@${this.actor.id}@M:${q + name + q}`,
+							encodedValue: `@${this.actor.id}@M:${q + name + q}|@system.melee.${k}`,
 							system: { actionType, actionId: `melee-${k}-attack` },
 						},
 					],
@@ -327,7 +327,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 							{
 								id: `melee-${k}-parry`,
 								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parry")} (${e.parry})`,
-								encodedValue: `@${this.actor.id}@P:${q + name + q}`,
+								encodedValue: `@${this.actor.id}@P:${q + name + q}|@system.melee.${k}`,
 								system: { actionType, actionId: `melee-${k}-parry` },
 							},
 						],
@@ -341,7 +341,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 							{
 								id: `melee-${k}-block`,
 								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.block")} (${e.block})`,
-								encodedValue: `${this.actor.id}@B:${q + name + q}`,
+								encodedValue: `${this.actor.id}@B:${q + name + q}|@system.melee.${k}`,
 								system: { actionType, actionId: `melee-${k}-block` },
 							},
 						],
@@ -354,7 +354,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 						{
 							id: `melee-${k}-damage`,
 							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.damage")} (${e.damage})`,
-							encodedValue: `@${this.actor.id}@D:${q + name + q}`,
+							encodedValue: `@${this.actor.id}@D:${q + name + q}|@system.melee.${k}`,
 							system: { actionType, actionId: `melee-${k}-damage` },
 						},
 						...notes,
@@ -392,7 +392,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 						{
 							id: `ranged-${k}-attack`,
 							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.attack")} (${e.level})`,
-							encodedValue: `@${this.actor.id}@R:${q + name + q}`,
+							encodedValue: `@${this.actor.id}@R:${q + name.trim() + q}|@system.ranged.${k}`,
 							system: { actionType, actionId: `ranged-${k}-attack` },
 						},
 					],
@@ -434,7 +434,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 						{
 							id: `ranged-${k}-damage`,
 							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.damage")} (${e.damage})`,
-							encodedValue: `@${this.actor.id}@D:${q + name + q}`,
+							encodedValue: `@${this.actor.id}@D:${q + name + q}|@system.ranged.${k}`,
 							system: { actionType, actionId: `ranged-${k}-damage` },
 						},
 						...notes,

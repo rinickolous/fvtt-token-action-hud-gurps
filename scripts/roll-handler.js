@@ -106,7 +106,15 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 			} else {
 				const saved = GURPS.LastActor
 				GURPS.SetLastActor(actor)
-				GURPS.executeOTF(encodedValues[0]).then(() => {
+				const action = GURPS.parselink(encodedValues[0]).action
+				delete action.sourceId
+				if (action.type === "attack" && encodedValues.length > 1) {
+					action.itemPath = encodedValues[1]
+				}
+				if (action.type === "damage") {
+					delete action.att
+				}
+				GURPS.performAction(action, actor, event).then(() => {
 					GURPS.SetLastActor(saved)
 				})
 			}
