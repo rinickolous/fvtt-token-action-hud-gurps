@@ -298,15 +298,15 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 			GURPS.recurselist(this.actor.system.melee, (e, k, _d) => {
 				const q = e.name.includes('"') ? "'" : '"'
-				const usage = !!e.mode ? `(${e.mode})` : ""
-				const name = `${e.name} ${usage}`
+				const usage = e.mode ? ` (${e.mode})` : ""
+				const name = `${e.name}${usage}`
 
 				const itemGroup = {
 					id: `melee-${k}`,
 					name: name,
 					type: "system",
 				}
-				this.addGroup(itemGroup, { id: "melee", type: "system" })
+				this.addGroup(itemGroup, { id: "melee", type: "system" }, true)
 				const notes = this.#getActionsFromNotes(e.notes, `melee-${k}`)
 
 				this.addActions(
@@ -376,15 +376,15 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 			GURPS.recurselist(this.actor.system.ranged, (e, k, _d) => {
 				const q = e.name.includes('"') ? "'" : '"'
-				const usage = !!e.mode ? `(${e.mode})` : ""
-				const name = `${e.name} ${usage}`
+				const usage = e.mode ? ` (${e.mode})` : ""
+				const name = `${e.name}${usage}`
 
 				const itemGroup = {
 					id: `ranged-${k}`,
 					name: name,
 					type: "system",
 				}
-				this.addGroup(itemGroup, { id: "ranged", type: "system" })
+				this.addGroup(itemGroup, { id: "ranged", type: "system" }, true)
 				const notes = this.#getActionsFromNotes(e.notes, `melee-${k}`)
 
 				this.addActions(
@@ -497,7 +497,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 				if (Object.keys(e.contains).length > 0) {
 					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : rootList
-					this.addGroup({ id, name: e.name, type: "system" }, list)
+					this.addGroup({ id, name: e.name, type: "system" }, list, true)
 				} else {
 					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
 					const notes = this.#getActionsFromNotes(e.notes, `skill-${id}`)
@@ -533,7 +533,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				if (actions.length > 0) {
 					const id = `trait-${k}`
 
-					this.addGroup({ id, name: e.name, type: "system" }, { id: "traits", type: "system" })
+					this.addGroup({ id, name: e.name, type: "system" }, { id: "traits", type: "system" }, true)
 					this.addActions(
 						actions.map(action => ({
 							...action,
@@ -566,7 +566,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 				if (Object.keys(e.contains).length > 0) {
 					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : rootList
-					this.addGroup({ id, name: e.name, type: "system" }, list)
+					this.addGroup({ id, name: e.name, type: "system" }, list, true)
 				} else {
 					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
 					const notes = this.#getActionsFromNotes(e.notes, `spell-${id}`)
