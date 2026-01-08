@@ -1,26 +1,25 @@
 {
-	"id": "token-action-hud-gurps",
-	"title": "Token Action HUD GURPS",
-	"description": "Token Action HUD is a repositionable HUD of actions for a selected token",
 	"authors": [
 		{
-			"name": "Mikolaj Tomczynski",
+			"discord": "sasiedny",
 			"email": "mikolaj@tomczynski.org",
-			"url": "https://github.com/rinickolous",
-			"discord": "sasiedny"
+			"name": "Mikolaj Tomczynski",
+			"url": "https://github.com/rinickolous"
 		}
 	],
-	"url": "This is auto replaced",
-	"flags": {},
-	"version": "This is auto replaced",
 	"compatibility": {
-		"minimum": "12",
 		"maximum": "13",
-		"verified": "13.344"
+		"minimum": "12",
+		"verified": "13.351"
 	},
-	"esmodules": ["./scripts/token-action-hud-gurps.min.js"],
-	"scripts": [],
-	"styles": ["./styles/tah-gurps.css"],
+	"coreTranslation": false,
+	"description": "Token Action HUD is a repositionable HUD of actions for a selected token",
+	"download": "This is auto replaced",
+	"esmodules": [
+		"./scripts/token-action-hud-gurps.min.js"
+	],
+	"flags": {},
+	"id": "token-action-hud-gurps",
 	"languages": [
 		{
 			"lang": "en",
@@ -28,43 +27,48 @@
 			"path": "languages/en.json"
 		}
 	],
+	"library": false,
+	"manifest": "This is auto replaced",
 	"packs": [],
+	"protected": false,
+	"readme": "https://github.com/rinickolous/fvtt-token-action-hud-gurps#readme",
 	"relationships": {
-		"systems": [
-			{
-				"id": "gurps",
-				"compatibility": [
-					{
-						"minimum": "0.18.1",
-						"maximum": "0.18.99",
-						"verified": "0.18.1"
-					}
-				]
-			}
-		],
-		"requires": [
-			{
-				"id": "token-action-hud-core",
-				"type": "module",
-				"compatibility": [
-					{
-						"minimum": "2.0.13",
-						"maximum": "2.0.99",
-						"verified": "2.0.13"
-					}
-				]
-			}
-		],
-		"optional": [],
 		"flags": {
 			"optional": []
-		}
+		},
+		"optional": [],
+		"requires": [
+			{
+				"compatibility": [
+					{
+						"maximum": "2.0.99",
+						"minimum": "2.0.13",
+						"verified": "2.0.13"
+					}
+				],
+				"id": "token-action-hud-core",
+				"type": "module"
+			}
+		],
+		"systems": [
+			{
+				"compatibility": [
+					{
+						"maximum": "0.18.99",
+						"minimum": "0.18.10",
+						"verified": "0.18.10"
+					}
+				],
+				"id": "gurps"
+			}
+		]
 	},
+	"scripts": [],
 	"socket": false,
-	"manifest": "This is auto replaced",
-	"download": "This is auto replaced",
-	"readme": "https://github.com/rinickolous/fvtt-token-action-hud-gurps#readme",
-	"protected": false,
-	"coreTranslation": false,
-	"library": false
+	"styles": [
+		"./styles/tah-gurps.css"
+	],
+	"title": "Token Action HUD GURPS",
+	"url": "This is auto replaced",
+	"version": "This is auto replaced"
 }
