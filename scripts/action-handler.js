@@ -141,6 +141,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 					{
 						id: "defense-retreat-block",
 						name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.blockRetreating")} (${this.actor.system.equippedblock + 1})`,
+						// GURPS.modifiers_.blockRetreat is generally rendered as "Retreating Block/Parry" so this is ok.
 						encodedValue: `@${this.actor.id}@ BLOCK +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
 						system: { actionType, actionId: "defense-retreat-block" },
 					},
@@ -341,7 +342,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 							{
 								id: `melee-${k}-block`,
 								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.block")} (${e.block})`,
-								encodedValue: `${this.actor.id}@B:${q + name + q}|@system.melee.${k}`,
+								encodedValue: `@${this.actor.id}@B:${q + name + q}|@system.melee.${k}`,
 								system: { actionType, actionId: `melee-${k}-block` },
 							},
 						],
@@ -366,7 +367,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build melee attack actions
+		/** Build ranged attack actions
 		 * @private
 		 * */
 		#buildRangedActions() {
@@ -385,7 +386,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 					type: "system",
 				}
 				this.addGroup(itemGroup, { id: "ranged", type: "system" }, true)
-				const notes = this.#getActionsFromNotes(e.notes, `melee-${k}`)
+				const notes = this.#getActionsFromNotes(e.notes, `ranged-${k}`)
 
 				this.addActions(
 					[
@@ -486,7 +487,12 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 			const actionType = ACTION_TYPE.otf
 
 			const rootList = { id: "skills", type: "system" }
-			const uncategorizedList = { id: "skills_uncategorized", name: "Uncategorized", type: "system" }
+			const uncategorizedList = {
+				id: "skills_uncategorized",
+				name: coreModule.api.Utils.i18n("tokenActionHud.gurps.uncategorized"),
+				type: "system",
+			}
+
 			this.addGroup(uncategorizedList, rootList)
 
 			if (Object.keys(this.actor.system.skills).length === 0) return
@@ -594,7 +600,11 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 		 */
 		#buildQuickNoteActions() {
 			const rootList = { id: "quickNotes", type: "system" }
-			const uncategorizedList = { id: "quickNotes_uncategorized", name: "Quick Notes", type: "system" }
+			const uncategorizedList = {
+				id: "quickNotes_uncategorized",
+				name: coreModule.api.Utils.i18n("tokenActionHud.gurps.quickNotes"),
+				type: "system",
+			}
 			this.addGroup(uncategorizedList, rootList)
 
 			const notes = this.#getActionsFromNotes(this.actor.system.additionalresources.qnotes, "quickNote")
