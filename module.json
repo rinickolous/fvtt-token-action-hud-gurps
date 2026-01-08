@@ -22,9 +22,29 @@
 	"id": "token-action-hud-gurps",
 	"languages": [
 		{
+			"lang": "de",
+			"name": "Deutsch",
+			"path": "languages/de.json"
+		},
+		{
 			"lang": "en",
 			"name": "English",
 			"path": "languages/en.json"
+		},
+		{
+			"lang": "fr",
+			"name": "Français",
+			"path": "languages/fr.json"
+		},
+		{
+			"lang": "pt_br",
+			"name": "Português Brasileiro",
+			"path": "languages/pt_br.json"
+		},
+		{
+			"lang": "ru",
+			"name": "Русский",
+			"path": "languages/ru.json"
 		}
 	],
 	"library": false,

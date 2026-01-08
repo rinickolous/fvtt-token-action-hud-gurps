@@ -1,0 +1,39 @@
+{
+	"tokenActionHud": {
+		"gurps": {
+			"acc": "Точность",
+			"attack": "Атака",
+			"attribute": "Характеристика",
+			"attributes": "Характеристики",
+			"block": "Блок",
+			"blockRetreating": "Блок с отступлением",
+			"blocks": "блоки",
+			"bulk": "Громоздкость",
+			"conditionalModifiers": "Условные модификаторы",
+			"damage": "Урон",
+			"defenses": "Защита",
+			"dodgeRetreating": "Уклонение с отступлением",
+			"dodges": "Уклонения",
+			"hearing": "Слух",
+			"maneuvers": "Манёвры",
+			"melee": "Ближний бой",
+			"otf": "OTF",
+			"parries": "Парирования",
+			"parry": "Парирование",
+			"parryFencingRetreating": "Фехтовальное парирование с отступлением",
+			"parryRetreating": "Парирование с отступлением",
+			"poolModifiers": "Атрибуты пула",
+			"posture": "Поза",
+			"quickNotes": "Быстрые заметки",
+			"ranged": "Дальний бой",
+			"reactions": "Реакции",
+			"senses": "Чувства",
+			"skills": "Навыки",
+			"spells": "Заклинания",
+			"tasteSmell": "Вкус/Запах",
+			"touch": "Осязание",
+			"traits": "Черты",
+			"vision": "Зрение"
+		}
+	}
+}

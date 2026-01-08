@@ -1,0 +1,39 @@
+{
+	"tokenActionHud": {
+		"gurps": {
+			"acc": "Précision",
+			"attack": "Attaque",
+			"attribute": "Attribut",
+			"attributes": "Attributs",
+			"block": "Blocage",
+			"blockRetreating": "Blocage en retraite",
+			"blocks": "blocages",
+			"bulk": "Encombrement",
+			"conditionalModifiers": "Modificateurs conditionnels",
+			"damage": "Dégâts",
+			"defenses": "Défenses",
+			"dodgeRetreating": "Esquive en retraite",
+			"dodges": "Esquives",
+			"hearing": "Ouïe",
+			"maneuvers": "Manœuvres",
+			"melee": "Corps à corps",
+			"otf": "OTF",
+			"parries": "Parades",
+			"parry": "Parade",
+			"parryFencingRetreating": "Parade d'escrime en retraite",
+			"parryRetreating": "Parade en retraite",
+			"poolModifiers": "Attributs de réserve",
+			"posture": "Posture",
+			"quickNotes": "Notes rapides",
+			"ranged": "À distance",
+			"reactions": "Réactions",
+			"senses": "Sens",
+			"skills": "Compétences",
+			"spells": "Sorts",
+			"tasteSmell": "Goût/Odeur",
+			"touch": "Toucher",
+			"traits": "Traits",
+			"vision": "Vision"
+		}
+	}
+}

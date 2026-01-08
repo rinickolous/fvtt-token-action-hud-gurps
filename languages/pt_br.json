@@ -1,0 +1,39 @@
+{
+	"tokenActionHud": {
+		"gurps": {
+			"acc": "Precisão",
+			"attack": "Ataque",
+			"attribute": "Atributo",
+			"attributes": "Atributos",
+			"block": "Bloqueio",
+			"blockRetreating": "Bloqueio em retirada",
+			"blocks": "bloqueios",
+			"bulk": "Volume",
+			"conditionalModifiers": "Modificadores condicionais",
+			"damage": "Dano",
+			"defenses": "Defesas",
+			"dodgeRetreating": "Esquiva em retirada",
+			"dodges": "Esquivas",
+			"hearing": "Audição",
+			"maneuvers": "Manobras",
+			"melee": "Corpo a corpo",
+			"otf": "OTF",
+			"parries": "Paradas",
+			"parry": "Parada",
+			"parryFencingRetreating": "Parada de esgrima em retirada",
+			"parryRetreating": "Parada em retirada",
+			"poolModifiers": "Atributos de reserva",
+			"posture": "Postura",
+			"quickNotes": "Notas rápidas",
+			"ranged": "À distância",
+			"reactions": "Reações",
+			"senses": "Sentidos",
+			"skills": "Habilidades",
+			"spells": "Magias",
+			"tasteSmell": "Paladar/Olfato",
+			"touch": "Toque",
+			"traits": "Características",
+			"vision": "Visão"
+		}
+	}
+}
