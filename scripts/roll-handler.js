@@ -19,20 +19,13 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 			const encodedValues = encodedValue?.split("|") ?? []
 
-			const knownCharacters = ["character", "enemy"]
-
-			// If single actor is selected
-			if (this.actor) {
+			if (!this.actor) {
+				for (const token of coreModule.api.Utils.getControlledTokens()) {
+					const actor = token.actor
+					await this.#handleAction(event, actionType, actor, token, actionId, encodedValues)
+				}
+			} else {
 				await this.#handleAction(event, actionType, this.actor, this.token, actionId, encodedValues)
-				return
-			}
-
-			const controlledTokens = canvas.tokens.controlled.filter(token => knownCharacters.includes(token.actor?.type))
-
-			// If multiple actors are selected
-			for (const token of controlledTokens) {
-				const actor = token.actor
-				await this.#handleAction(event, actionType, actor, token, actionId, encodedValues)
 			}
 		}
 
@@ -99,21 +92,24 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 		async #rollOTF(event, actor, encodedValues, rightClickDamage = false) {
 			if (rightClickDamage && event.type === "contextmenu") {
 				const otfText = encodedValues[0]
+
 				const otfAction = GURPS.parselink(otfText)
 				otfAction.action.calcOnly = true
+
 				const formula = await GURPS.performAction(otfAction.action, actor)
+
 				GURPS.resolveDamageRoll(event, actor, formula, "", game.user?.isGM, true)
 			} else {
 				const saved = GURPS.LastActor
 				GURPS.SetLastActor(actor)
+
 				const action = GURPS.parselink(encodedValues[0]).action
+
 				delete action.sourceId
 				if (action.type === "attack" && encodedValues.length > 1) {
 					action.itemPath = encodedValues[1]
 				}
-				if (action.type === "damage") {
-					delete action.att
-				}
+
 				GURPS.performAction(action, actor, event).then(() => {
 					GURPS.SetLastActor(saved)
 				})

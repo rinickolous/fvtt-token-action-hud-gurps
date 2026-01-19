@@ -19,7 +19,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 			if (!GURPS) return
 
 			// Set actor and token variables
-			this.actors = !this.actor ? this._getActors() : [this.actor]
+			// this.actors = this.actor ? [this.actor] : []
 			this.actorType = this.actor?.type
 
 			// Set items variable
