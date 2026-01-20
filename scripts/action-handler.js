@@ -528,7 +528,9 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				const q = e.name.includes('"') ? "'" : '"'
 				const id = e.uuid
 
-				if (Object.keys(e.contains).length > 0) {
+				const isContainer = Object.keys(e.contains).length > 0 || e.level === ""
+
+				if (isContainer) {
 					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : rootList
 					this.addGroup({ id, name: e.name, type: "system" }, list, true)
 				} else {
@@ -597,7 +599,9 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				const q = e.name.includes('"') ? "'" : '"'
 				const id = e.uuid
 
-				if (Object.keys(e.contains).length > 0) {
+				const isContainer = Object.keys(e.contains).length > 0 || e.level === ""
+
+				if (isContainer) {
 					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : rootList
 					this.addGroup({ id, name: e.name, type: "system" }, list, true)
 				} else {
