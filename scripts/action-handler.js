@@ -101,54 +101,81 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 			this.addActions(dodges, { id: "dodges", type: "system" })
 
-			if (this.actor.system.equippedparry) {
-				const parries = [
-					{
-						id: "defense-parry",
-						name: `${coreModule.api.Utils.i18n("GURPS.parry")} (${this.actor.system.equippedparry})`,
-						encodedValue: `@${this.actor.id}@ PARRY`,
-						system: { actionType, actionId: "defense-parry" },
-					},
-				]
-
-				if (this.actor.system.equippedparryisfencing) {
-					parries.push({
-						id: "defense-retreat-parry-fencing",
-						name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryFencingRetreating")} (${this.actor.system.equippedparry + 3})`,
-						encodedValue: `@${this.actor.id}@ PARRY +3 ${coreModule.api.Utils.i18n("GURPS.modifiers_.fencingRetreat")}`,
-						system: { actionType, actionId: "defense-retreat-parry" },
-					})
-				} else {
-					parries.push({
-						id: "defense-retreat-parry",
-						name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryRetreating")} (${this.actor.system.equippedparry + 1})`,
-						encodedValue: `@${this.actor.id}@ PARRY +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
-						system: { actionType, actionId: "defense-retreat-parry" },
-					})
+			GURPS.recurselist(this.actor.system.melee, (e, k, _d) => {
+				const q = e.name.includes('"') ? "'" : '"'
+				const usage = e.mode ? ` (${e.mode})` : ""
+				const name = `${e.name}${usage}`
+				const itemGroup = {
+					id: `defense-${k}`,
+					name: name,
+					type: "system",
 				}
 
-				this.addActions(parries, { id: "parries", type: "system" })
-			}
+				this.addGroup(itemGroup, { id: "defenses", type: "system" }, true)
 
-			if (this.actor.system.equippedblock) {
-				const blocks = [
-					{
-						id: "defense-block",
-						name: `${coreModule.api.Utils.i18n("GURPS.block")} (${this.actor.system.equippedblock})`,
-						encodedValue: `@${this.actor.id}@ BLOCK`,
-						system: { actionType, actionId: "defense-block" },
-					},
-					{
-						id: "defense-retreat-block",
-						name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.blockRetreating")} (${this.actor.system.equippedblock + 1})`,
-						// GURPS.modifiers_.blockRetreat is generally rendered as "Retreating Block/Parry" so this is ok.
-						encodedValue: `@${this.actor.id}@ BLOCK +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}`,
-						system: { actionType, actionId: "defense-retreat-block" },
-					},
-				]
+				if (!isNaN(parseInt(e.parry))) {
+					const parry = parseInt(e.parry)
+					this.addActions(
+						[
+							{
+								id: `defense-${k}-parry`,
+								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parry")} (${parry})`,
+								encodedValue: `@${this.actor.id}@P:${q + name + q}|@system.melee.${k}`,
+								system: { actionType, actionId: `defense-${k}-parry` },
+							},
+						],
+						itemGroup
+					)
 
-				this.addActions(blocks, { id: "blocks", type: "system" })
-			}
+					const isFencing = e.parry.toString().toLowerCase().endsWith("f")
+					if (isFencing) {
+						this.addActions(
+							[
+								{
+									id: `defense-${k}-parry-fencing`,
+									name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryFencingRetreating")} (${parry + 3})`,
+									encodedValue: `@${this.actor.id}@P:${q + name + q} +3 ${coreModule.api.Utils.i18n("GURPS.modifiers_.fencingRetreat")}|@system.melee.${k}`,
+									system: { actionType, actionId: `defense-${k}-parry-fencing` },
+								},
+							],
+							itemGroup
+						)
+					} else {
+						this.addActions(
+							[
+								{
+									id: `defense-${k}-parry-retreat`,
+									name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryRetreating")} (${parry + 1})`,
+									encodedValue: `@${this.actor.id}@P:${q + name + q} +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}|@system.melee.${k}`,
+									system: { actionType, actionId: `defense-${k}-parry-retreat` },
+								},
+							],
+							itemGroup
+						)
+					}
+				}
+
+				if (!isNaN(parseInt(e.block))) {
+					const block = parseInt(e.block)
+					this.addActions(
+						[
+							{
+								id: `defense-${k}-block`,
+								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.block")} (${block})`,
+								encodedValue: `@${this.actor.id}@B:${q + name + q}|@system.melee.${k}`,
+								system: { actionType, actionId: `defense-${k}-block` },
+							},
+							{
+								id: `defense-${k}-block-retreat`,
+								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.blockRetreating")} (${block + 1})`,
+								encodedValue: `@${this.actor.id}@B:${q + name + q} +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}|@system.melee.${k}`,
+								system: { actionType, actionId: `defense-${k}-block` },
+							},
+						],
+						itemGroup
+					)
+				}
+			})
 		}
 
 		/* ---------------------------------------- */
@@ -241,7 +268,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 		 * @private
 		 */
 		#buildReactionActions() {
-			if (Object.keys(this.actor.system.reactions).length === 0) return
+			if (!this.actor.system.reactions || Object.keys(this.actor.system.reactions).length === 0) return
 
 			const actionType = ACTION_TYPE.otf
 			const reactions = []
@@ -267,7 +294,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 		 * @private
 		 */
 		#buildConditionalModifierActions() {
-			if (Object.keys(this.actor.system.conditionalmods).length === 0) return
+			if (!this.actor.system.conditionalmods || Object.keys(this.actor.system.conditionalmods).length === 0) return
 
 			const actionType = ACTION_TYPE.otf
 			const conditionalModifiers = []
