@@ -25,9 +25,9 @@
 		"url": "git+https://github.com/rinickolous/token-action-hud-gurps.git"
 	},
 	"scripts": {
-		"build": "rollup -c",
+		"build": "rollup -cm",
 		"dev": "rollup -wcm"
 	},
 	"tpype": "module",
-	"version": "1.0.1"
+	"version": "1.2.0"
 }
