@@ -8,16 +8,14 @@
 		}
 	],
 	"compatibility": {
-		"maximum": "13",
-		"minimum": "12",
-		"verified": "13.351"
+		"maximum": "14",
+		"minimum": "13",
+		"verified": "14.360"
 	},
 	"coreTranslation": false,
 	"description": "Token Action HUD is a repositionable HUD of actions for a selected token",
 	"download": "This is auto replaced",
-	"esmodules": [
-		"./scripts/token-action-hud-gurps.min.js"
-	],
+	"esmodules": ["./scripts/token-action-hud-gurps.min.js"],
 	"flags": {},
 	"id": "token-action-hud-gurps",
 	"languages": [
@@ -61,9 +59,9 @@
 			{
 				"compatibility": [
 					{
-						"maximum": "2.0.99",
-						"minimum": "2.0.13",
-						"verified": "2.0.13"
+						"maximum": "2.1.99",
+						"minimum": "2.1.0",
+						"verified": "2.1.1"
 					}
 				],
 				"id": "token-action-hud-core",
@@ -76,7 +74,7 @@
 					{
 						"maximum": "0.18.99",
 						"minimum": "0.18.10",
-						"verified": "0.18.10"
+						"verified": "0.18.16"
 					}
 				],
 				"id": "gurps"
@@ -85,9 +83,7 @@
 	},
 	"scripts": [],
 	"socket": false,
-	"styles": [
-		"./styles/tah-gurps.css"
-	],
+	"styles": ["./styles/tah-gurps.css"],
 	"title": "Token Action HUD GURPS",
 	"url": "This is auto replaced",
 	"version": "This is auto replaced"
