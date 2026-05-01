@@ -46,9 +46,10 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 			this.#buildDefenseActions()
 			this.#buildMeleeActions()
 			this.#buildRangedActions()
-			this.#buildSkillActions()
 			this.#buildTraitActions()
+			this.#buildSkillActions()
 			this.#buildSpellActions()
+			this.#buildEquipmentActions()
 			this.#buildQuickNoteActions()
 			this.#buildManeuverActions()
 			this.#buildPostureActions()
@@ -507,6 +508,35 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
+		/** Build trait actions
+		 * @private
+		 */
+		#buildTraitActions() {
+			const actionType = ACTION_TYPE.otf
+
+			if (Object.keys(this.actor.system.ads).length === 0) return
+
+			GURPS.recurselist(this.actor.system.ads, (e, k, _d) => {
+				const actions = this.#getActionsFromNotes(e.notes, `trait-${k}`)
+
+				if (actions.length > 0) {
+					const id = `trait-${k}`
+
+					this.addGroup({ id, name: e.name, type: "system" }, { id: "traits", type: "system" }, true)
+					this.addActions(
+						actions.map(action => ({
+							...action,
+							id: `${id}-${action.id}`,
+							system: { actionType, actionId: `${id}-${action.id}` },
+						})),
+						{ id, name: e.name, type: "system" }
+					)
+				}
+			})
+		}
+
+		/* ---------------------------------------- */
+
 		/** Build skill actions
 		 * @private
 		 */
@@ -555,34 +585,6 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build trait actions
-		 * @private
-		 */
-		#buildTraitActions() {
-			const actionType = ACTION_TYPE.otf
-
-			if (Object.keys(this.actor.system.ads).length === 0) return
-
-			GURPS.recurselist(this.actor.system.ads, (e, k, _d) => {
-				const actions = this.#getActionsFromNotes(e.notes, `trait-${k}`)
-				if (actions.length > 0) {
-					const id = `trait-${k}`
-
-					this.addGroup({ id, name: e.name, type: "system" }, { id: "traits", type: "system" }, true)
-					this.addActions(
-						actions.map(action => ({
-							...action,
-							id: `${id}-${action.id}`,
-							system: { actionType, actionId: `${id}-${action.id}` },
-						})),
-						{ id, name: e.name, type: "system" }
-					)
-				}
-			})
-		}
-
-		/* ---------------------------------------- */
-
 		/** Build spell actions
 		 * @private
 		 */
@@ -619,6 +621,59 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 							...notes,
 						],
 						list
+					)
+				}
+			})
+		}
+
+		/* ---------------------------------------- */
+
+		/** Build equipment actions
+		 * @private
+		 */
+		#buildEquipmentActions() {
+			const actionType = ACTION_TYPE.otf
+
+			if (
+				Object.keys(this.actor.system.equipment.carried).length === 0 &&
+				Object.keys(this.actor.system.equipment.other).length === 0
+			)
+				return
+
+			GURPS.recurselist(this.actor.system.equipment.carried, (e, k, _d) => {
+				const actions = this.#getActionsFromNotes(e.notes, `equipment-carried-${k}`)
+
+				if (actions.length > 0) {
+					const id = `equipment-carried-${k}`
+
+					console.log(id)
+
+					this.addGroup({ id, name: e.name, type: "system" }, { id: "equipment", type: "system" }, true)
+					this.addActions(
+						actions.map(action => ({
+							...action,
+							id: `${id}-${action.id}`,
+							system: { actionType, actionId: `${id}-${action.id}` },
+						})),
+						{ id, name: e.name, type: "system" }
+					)
+				}
+			})
+
+			GURPS.recurselist(this.actor.system.equipment.other, (e, k, _d) => {
+				const actions = this.#getActionsFromNotes(e.notes, `equipment-other-${k}`)
+
+				if (actions.length > 0) {
+					const id = `equipment-other-${k}`
+
+					this.addGroup({ id, name: e.name, type: "system" }, { id: "equipment", type: "system" }, true)
+					this.addActions(
+						actions.map(action => ({
+							...action,
+							id: `${id}-${action.id}`,
+							system: { actionType, actionId: `${id}-${action.id}` },
+						})),
+						{ id, name: e.name, type: "system" }
 					)
 				}
 			})

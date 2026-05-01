@@ -69,6 +69,12 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				type: "system",
 			},
 			{
+				id: "equipment",
+				nestId: "equipment",
+				name: coreModule.api.Utils.i18n("tokenActionHud.gurps.equipment"),
+				type: "system",
+			},
+			{
 				id: "quickNotes",
 				nestId: "quickNotes",
 				name: coreModule.api.Utils.i18n("tokenActionHud.gurps.quickNotes"),

@@ -31,10 +31,7 @@ export const ACTION_TYPE = {
  * Groups
  */
 export const GROUP = {
-	poolModifiers: { id: "poolModifiers", name: "tokenActionHud.gurps.poolModifiers", type: "system" },
 	attributes: { id: "attributes", name: "tokenActionHud.gurps.attributes", type: "system" },
-	senses: { id: "senses", name: "tokenActionHud.gurps.senses", type: "system" },
-	reactions: { id: "reactions", name: "tokenActionHud.gurps.reactions", type: "system" },
 	conditionalModifiers: {
 		id: "conditionalModifiers",
 		name: "tokenActionHud.gurps.conditionalModifiers",
@@ -42,14 +39,18 @@ export const GROUP = {
 	},
 	defenses: { id: "defenses", name: "tokenActionHud.gurps.defenses", type: "system" },
 	dodges: { id: "dodges", name: "tokenActionHud.gurps.dodges", type: "system" },
+	equipment: { id: "equipment", name: "tokenActionHud.gurps.equipment", type: "system" },
+	maneuvers: { id: "maneuvers", name: "tokenActionHud.gurps.maneuvers", type: "system" },
 	melee: { id: "melee", name: "tokenActionHud.gurps.melee", type: "system" },
-	ranged: { id: "ranged", name: "tokenActionsHud.gurps.ranged", type: "system" },
-	skills: { id: "skills", name: "tokenActionHud.gurps.skills", type: "system" },
+	poolModifiers: { id: "poolModifiers", name: "tokenActionHud.gurps.poolModifiers", type: "system" },
+	posture: { id: "posture", name: "tokenActionHud.gurps.posture", type: "system" },
 	quickNotes: { id: "quickNotes", name: "tokenActionHud.gurps.quickNotes", type: "system" },
+	ranged: { id: "ranged", name: "tokenActionsHud.gurps.ranged", type: "system" },
+	reactions: { id: "reactions", name: "tokenActionHud.gurps.reactions", type: "system" },
+	senses: { id: "senses", name: "tokenActionHud.gurps.senses", type: "system" },
+	skills: { id: "skills", name: "tokenActionHud.gurps.skills", type: "system" },
 	spells: { id: "spells", name: "tokenActionHud.gurps.spells", type: "system" },
 	traits: { id: "traits", name: "tokenActionHud.gurps.traits", type: "system" },
-	maneuvers: { id: "maneuvers", name: "tokenActionHud.gurps.maneuvers", type: "system" },
-	posture: { id: "posture", name: "tokenActionHud.gurps.posture", type: "system" },
 	utility: { id: "utility", name: "tokenActionHud.utility", type: "system" },
 }
 
