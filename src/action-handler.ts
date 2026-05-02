@@ -1,4 +1,5 @@
 import { ACTION_TYPE } from "./constants.ts"
+import { ActorType } from "./enum.ts"
 
 export let ActionHandler: any = null
 
@@ -13,7 +14,7 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 				this.items = this.actor.items
 			}
 
-			if (this.actorType === "character" || this.actorType === "enemy") {
+			if (this.actorType === ActorType.Character) {
 				await this.#buildCharacterActions()
 			} else if (!this.actor) {
 				this.#buildMultipleTokenActions()
@@ -72,75 +73,62 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 
 			this.addActions(dodges, { id: "dodges", type: "system" })
 
-			GURPS.recurselist(this.actor.system.melee, (e: any, k: string, _d: any) => {
-				const q = e.name.includes('"') ? "'" : '"'
-				const usage = e.mode ? ` (${e.mode})` : ""
-				const name = `${e.name}${usage}`
+			this.actor.system.meleeV2.forEach((melee: any) => {
+				const id = melee.id
+				const displayItem = melee.toDisplayItem()
+
 				const itemGroup = {
-					id: `defense-${k}`,
-					name: name,
+					id: `defense-${id}`,
+					name: melee._displayName,
 					type: "system",
 				}
 
 				this.addGroup(itemGroup, { id: "defenses", type: "system" }, true)
 
-				if (!isNaN(parseInt(e.parry))) {
-					const parry = parseInt(e.parry)
+				if (melee.parry.canParry) {
+					const parry = melee.parryLevel
+
+					const fencingId = melee.parry.fencing ? `defense-${id}-parry-fencing` : `defense-${id}-parry-retreat`
+
+					const fencingName = melee.parry.fencing
+						? `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryFencingRetreating")} (${parry + 3})`
+						: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryRetreating")} (${parry + 1})`
+
 					this.addActions(
 						[
 							{
-								id: `defense-${k}-parry`,
+								id: `defense-${id}-parry`,
 								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parry")} (${parry})`,
-								encodedValue: `@${this.actor.id}@P:${q + name + q}|@system.melee.${k}`,
-								system: { actionType, actionId: `defense-${k}-parry` },
+								encodedValue: displayItem.otf.parry,
+								system: { actionType, actionId: `defense-${id}-parry` },
+							},
+							{
+								id: fencingId,
+								name: fencingName,
+								encodedValue: displayItem.otf.parryFencing,
+								system: { actionType, actionId: `defense-${id}-parry` },
 							},
 						],
 						itemGroup
 					)
-
-					const isFencing = e.parry.toString().toLowerCase().endsWith("f")
-					if (isFencing) {
-						this.addActions(
-							[
-								{
-									id: `defense-${k}-parry-fencing`,
-									name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryFencingRetreating")} (${parry + 3})`,
-									encodedValue: `@${this.actor.id}@P:${q + name + q} +3 ${coreModule.api.Utils.i18n("GURPS.modifiers_.fencingRetreat")}|@system.melee.${k}`,
-									system: { actionType, actionId: `defense-${k}-parry-fencing` },
-								},
-							],
-							itemGroup
-						)
-					} else {
-						this.addActions(
-							[
-								{
-									id: `defense-${k}-parry-retreat`,
-									name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryRetreating")} (${parry + 1})`,
-									encodedValue: `@${this.actor.id}@P:${q + name + q} +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}|@system.melee.${k}`,
-									system: { actionType, actionId: `defense-${k}-parry-retreat` },
-								},
-							],
-							itemGroup
-						)
-					}
 				}
 
-				if (!isNaN(parseInt(e.block))) {
-					const block = parseInt(e.block)
+				if (melee.block.canBlock) {
+					const block = melee.blockLevel
+
 					this.addActions(
 						[
 							{
-								id: `defense-${k}-block`,
+								id: `defense-${id}-block`,
 								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.block")} (${block})`,
-								encodedValue: `@${this.actor.id}@B:${q + name + q}|@system.melee.${k}`,
-								system: { actionType, actionId: `defense-${k}-block` },
+								encodedValue: melee.otf.block,
+								system: { actionType, actionId: `defense-${id}-block` },
 							},
 							{
-								id: `defense-${k}-block-retreat`,
+								id: `defense-${id}-block-retreat`,
 								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.blockRetreating")} (${block + 1})`,
-								encodedValue: `@${this.actor.id}@B:${q + name + q} +1 ${coreModule.api.Utils.i18n("GURPS.modifiers_.blockRetreat")}|@system.melee.${k}`,
-								system: { actionType, actionId: `defense-${k}-block` },
+								encodedValue: melee.otf.blockRetreat,
+								system: { actionType, actionId: `defense-${id}-block` },
 							},
 						],
 						itemGroup
@@ -239,20 +227,19 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 		/* ---------------------------------------- */
 
 		#buildReactionActions(): void {
-			if (!this.actor.system.reactions || Object.keys(this.actor.system.reactions).length === 0) return
-
 			const actionType = ACTION_TYPE.otf
 			const reactions: any[] = []
 
-			GURPS.recurselist(this.actor.system.reactions, (e: any, k: string, _d: any) => {
-				if (isNaN(parseInt(e.modifier))) return
-				const modifier = parseInt(e.modifier) > 0 ? `+${e.modifier}` : e.modifier
+			this.actor.system.reactions.forEach((reaction: any) => {
+				if (reaction.modifier === 0) return
+				const modifier = reaction.modifier.signedString()
+				const displayItem = reaction.toDisplayItem()
 
 				reactions.push({
-					id: `reaction-${k}`,
-					name: `${modifier} ${e.situation}`,
-					encodedValue: `@${this.actor.id}@[${modifier} ${e.situation}]`,
-					system: { actionType, actionId: `reaction-${k}` },
+					id: `reaction-${reaction.id}`,
+					name: `${modifier} ${reaction.situation}`,
+					encodedValue: displayItem.otf.modifier,
+					system: { actionType, actionId: `reaction-${reaction.id}` },
 				})
 			})
 
@@ -262,20 +249,19 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 		/* ---------------------------------------- */
 
 		#buildConditionalModifierActions(): void {
-			if (!this.actor.system.conditionalmods || Object.keys(this.actor.system.conditionalmods).length === 0) return
-
 			const actionType = ACTION_TYPE.otf
 			const conditionalModifiers: any[] = []
 
-			GURPS.recurselist(this.actor.system.conditionalmods, (e: any, k: string, _d: any) => {
-				if (isNaN(parseInt(e.modifier))) return
-				const modifier = parseInt(e.modifier) > 0 ? `+${e.modifier}` : e.modifier
+			this.actor.system.conditionalmods.forEach((condMod: any) => {
+				if (condMod.modifier === 0) return
+				const modifier = condMod.modifier.signedString()
+				const displayItem = condMod.toDisplayItem()
 
 				conditionalModifiers.push({
-					id: `conditionalModifier-${k}`,
-					name: `${modifier} ${e.situation}`,
-					encodedValue: `@${this.actor.id}@ ${modifier} ${e.situation}`,
-					system: { actionType, actionId: `conditionalModifier-${k}` },
+					id: `conditionalModifier-${condMod.id}`,
+					name: `${modifier} ${condMod.situation}`,
+					encodedValue: displayItem.otf.modifier,
+					system: { actionType, actionId: `conditionalModifier-${condMod.id}` },
 				})
 			})
 
@@ -285,70 +271,91 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 		/* ---------------------------------------- */
 
 		#buildMeleeActions(): void {
-			if (Object.keys(this.actor.system.melee).length === 0) return
-
 			const actionType = ACTION_TYPE.otf
 
-			GURPS.recurselist(this.actor.system.melee, (e: any, k: string, _d: any) => {
-				const q = e.name.includes('"') ? "'" : '"'
-				const usage = e.mode ? ` (${e.mode})` : ""
-				const name = `${e.name}${usage}`
+			this.actor.system.meleeV2.forEach((melee: any) => {
+				const id = melee.id
+				const displayItem = melee.toDisplayItem()
 
 				const itemGroup = {
-					id: `melee-${k}`,
-					name: name,
+					id: `melee-${id}`,
+					name: melee._displayName,
 					type: "system",
 				}
+
 				this.addGroup(itemGroup, { id: "melee", type: "system" }, true)
-				const notes = this.#getActionsFromNotes(e.notes, `melee-${k}`)
 
 				this.addActions(
 					[
 						{
-							id: `melee-${k}-attack`,
-							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.attack")} (${e.level})`,
-							encodedValue: `@${this.actor.id}@M:${q + name + q}|@system.melee.${k}`,
-							system: { actionType, actionId: `melee-${k}-attack` },
+							id: `melee-${id}-attack`,
+							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.attack")} (${melee.level})`,
+							encodedValue: displayItem.otf.level,
+							system: { actionType, actionId: `melee-${id}-attack` },
 						},
 					],
 					itemGroup
 				)
 
-				if (!isNaN(parseInt(e.parry))) {
+				if (melee.parry.canParry) {
+					const parry = melee.parryLevel
+
+					const fencingId = melee.parry.fencing ? `defense-${id}-parry-fencing` : `defense-${id}-parry-retreat`
+
+					const fencingName = melee.parry.fencing
+						? `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryFencingRetreating")} (${parry + 3})`
+						: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parryRetreating")} (${parry + 1})`
+
 					this.addActions(
 						[
 							{
-								id: `melee-${k}-parry`,
-								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parry")} (${e.parry})`,
-								encodedValue: `@${this.actor.id}@P:${q + name + q}|@system.melee.${k}`,
-								system: { actionType, actionId: `melee-${k}-parry` },
+								id: `defense-${id}-parry`,
+								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.parry")} (${parry})`,
+								encodedValue: displayItem.otf.parry,
+								system: { actionType, actionId: `defense-${id}-parry` },
+							},
+							{
+								id: fencingId,
+								name: fencingName,
+								encodedValue: displayItem.otf.parryFencing,
+								system: { actionType, actionId: `defense-${id}-parry` },
 							},
 						],
 						itemGroup
 					)
 				}
 
-				if (!isNaN(parseInt(e.block))) {
+				if (melee.block.canBlock) {
+					const block = melee.blockLevel
+
 					this.addActions(
 						[
 							{
-								id: `melee-${k}-block`,
-								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.block")} (${e.block})`,
-								encodedValue: `@${this.actor.id}@B:${q + name + q}|@system.melee.${k}`,
-								system: { actionType, actionId: `melee-${k}-block` },
+								id: `defense-${id}-block`,
+								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.block")} (${block})`,
+								encodedValue: melee.otf.block,
+								system: { actionType, actionId: `defense-${id}-block` },
+							},
+							{
+								id: `defense-${id}-block-retreat`,
+								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.blockRetreating")} (${block + 1})`,
+								encodedValue: melee.otf.blockRetreat,
+								system: { actionType, actionId: `defense-${id}-block` },
 							},
 						],
 						itemGroup
 					)
 				}
+
+				const notes = this.#getActionsFromNotes(melee.notes, `melee-${id}`)
 
 				this.addActions(
 					[
 						{
-							id: `melee-${k}-damage`,
-							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.damage")} (${e.damage})`,
-							encodedValue: `@${this.actor.id}@D:${q + name + q}|@system.melee.${k}`,
-							system: { actionType, actionId: `melee-${k}-damage` },
+							id: `melee-${id}-damage`,
+							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.damage")} (${[...melee.damage].join(" ")})`,
+							encodedValue: displayItem.otf.damage,
+							system: { actionType, actionId: `melee-${id}-damage` },
 						},
 						...notes,
 					],
@@ -360,72 +367,73 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 		/* ---------------------------------------- */
 
 		#buildRangedActions(): void {
-			if (Object.keys(this.actor.system.ranged).length === 0) return
-
 			const actionType = ACTION_TYPE.otf
 
-			GURPS.recurselist(this.actor.system.ranged, (e: any, k: string, _d: any) => {
-				const q = e.name.includes('"') ? "'" : '"'
-				const usage = e.mode ? ` (${e.mode})` : ""
-				const name = `${e.name}${usage}`
+			this.actor.system.rangedV2.forEach((ranged: any) => {
+				const id = ranged.id
+				const displayItem = ranged.toDisplayItem()
 
 				const itemGroup = {
-					id: `ranged-${k}`,
-					name: name,
+					id: `ranged-${id}`,
+					name: ranged._displayName,
 					type: "system",
 				}
+
 				this.addGroup(itemGroup, { id: "ranged", type: "system" }, true)
-				const notes = this.#getActionsFromNotes(e.notes, `ranged-${k}`)
 
 				this.addActions(
 					[
 						{
-							id: `ranged-${k}-attack`,
-							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.attack")} (${e.level})`,
-							encodedValue: `@${this.actor.id}@R:${q + name.trim() + q}|@system.ranged.${k}`,
-							system: { actionType, actionId: `ranged-${k}-attack` },
+							id: `ranged-${id}-attack`,
+							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.attack")} (${ranged.level})`,
+							encodedValue: displayItem.otf.level,
+							system: { actionType, actionId: `ranged-${id}-attack` },
 						},
 					],
 					itemGroup
 				)
 
-				if (!isNaN(parseInt(e.acc))) {
-					const acc = parseInt(e.acc) > 0 ? `+${e.acc}` : e.acc
+				if (ranged.acc.base !== 0 || ranged.acc.scope !== 0) {
+					const acc = ranged.accText
+
 					this.addActions(
 						[
 							{
-								id: `ranged-${k}-acc`,
+								id: `ranged-${id}-acc`,
 								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.acc")} (${acc})`,
-								encodedValue: `@${this.actor.id}@${acc} Acc for ${e.name}`,
-								system: { actionType, actionId: `ranged-${k}-acc` },
+								encodedValue: `@${this.actor.id}@${acc} ${coreModule.api.Utils.i18n("GURPS.accForWeapon", { weapon: ranged._displayName })}`,
+								system: { actionType, actionId: `ranged-${id}-acc` },
 							},
 						],
 						itemGroup
 					)
 				}
 
-				if (!isNaN(parseInt(e.bulk))) {
-					const bulk = parseInt(e.bulk) > 0 ? `+${e.bulk}` : e.bulk
+				if (ranged.bulk.normal !== 0 || ranged.bulk.giant !== 0) {
+					const bulk = ranged.bulkText
+
 					this.addActions(
 						[
 							{
-								id: `ranged-${k}-bulk`,
+								id: `ranged-${id}-bulk`,
 								name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.bulk")} (${bulk})`,
-								encodedValue: `@${this.actor.id}@${bulk} Bulk for ${e.name}`,
-								system: { actionType, actionId: `ranged-${k}-bulk` },
+								encodedValue: `@${this.actor.id}@${bulk} ${coreModule.api.Utils.i18n("GURPS.bulkForWeapon", { weapon: ranged._displayName })}`,
+								system: { actionType, actionId: `ranged-${id}-bulk` },
 							},
 						],
 						itemGroup
 					)
 				}
+
+				const notes = this.#getActionsFromNotes(ranged.notes, `ranged-${id}`)
 
 				this.addActions(
 					[
 						{
-							id: `ranged-${k}-damage`,
-							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.damage")} (${e.damage})`,
-							encodedValue: `@${this.actor.id}@D:${q + name + q}|@system.ranged.${k}`,
-							system: { actionType, actionId: `ranged-${k}-damage` },
+							id: `ranged-${id}-damage`,
+							name: `${coreModule.api.Utils.i18n("tokenActionHud.gurps.damage")} (${[...ranged.damage].join(" ")})`,
+							encodedValue: displayItem.otf.damage,
+							system: { actionType, actionId: `ranged-${id}-damage` },
 						},
 						...notes,
 					],
@@ -440,7 +448,7 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 			const actions: any[] = []
 
 			if (notes && notes.length > 0) {
-				GURPS.gurpslink(notes, false, true).forEach((action: any) => {
+				GURPS.gurpslink(notes, true)?.forEach((action: any) => {
 					const id = `${prefix}-note-${actions.length}`
 
 					const parser = new DOMParser()
@@ -468,21 +476,30 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 		#buildTraitActions(): void {
 			const actionType = ACTION_TYPE.otf
 
-			if (Object.keys(this.actor.system.ads).length === 0) return
+			this.actor.system.allAdsV2.forEach((trait: any) => {
+				const id = `trait-${trait.id}`
+				const actions = this.#getActionsFromNotes(trait.system.notes, id)
 
-			GURPS.recurselist(this.actor.system.ads, (e: any, k: string, _d: any) => {
-				const actions = this.#getActionsFromNotes(e.notes, `trait-${k}`)
+				if (trait.system.cr !== null) {
+					const displayItem = trait.system.toDisplayItem()
+
+					actions.push({
+						id: `${id}-cr`,
+						name: coreModule.api.Utils.i18n(displayItem.cr),
+						encodedValue: displayItem.otf.cr,
+						system: { actionType, actionId: `${id}-cr` },
+					})
+				}
+
 				if (actions.length > 0) {
-					const id = `trait-${k}`
-
-					this.addGroup({ id, name: e.name, type: "system" }, { id: "traits", type: "system" }, true)
+					this.addGroup({ id, name: trait.name, type: "system" }, { id: "traits", type: "system" }, true)
 					this.addActions(
 						actions.map((action: any) => ({
 							...action,
 							id: `${id}-${action.id}`,
 							system: { actionType, actionId: `${id}-${action.id}` },
 						})),
-						{ id, name: e.name, type: "system" }
+						{ id, name: trait.name, type: "system" }
 					)
 				}
 			})
@@ -502,27 +519,29 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 
 			this.addGroup(uncategorizedList, rootList)
 
-			if (Object.keys(this.actor.system.skills).length === 0) return
+			const addActionsForSkill = (skill: any) => {
+				const id = skill.id
 
-			GURPS.recurselist(this.actor.system.skills, (e: any, _k: string, _d: any) => {
-				const q = e.name.includes('"') ? "'" : '"'
-				const id = e.uuid
+				if (skill.system.isContainer) {
+					const list = skill.system.containedBy ? { id: skill.system.containedBy, type: "system" } : rootList
+					this.addGroup({ id, name: skill.name, type: "system" }, list, true)
 
-				const isContainer = Object.keys(e.contains).length > 0 || e.level === ""
-
-				if (isContainer) {
-					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : rootList
-					this.addGroup({ id, name: e.name, type: "system" }, list, true)
+					skill.system.children.forEach((childSkill: any) => {
+						addActionsForSkill(childSkill)
+					})
 				} else {
-					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
-					const notes = this.#getActionsFromNotes(e.notes, `skill-${id}`)
+					console.log("Adding skill action", skill.name, skill.system.containedBy)
+
+					const displayItem = skill.system.toDisplayItem()
+					const list = skill.system.containedBy ? { id: skill.system.containedBy, type: "system" } : uncategorizedList
+					const notes = this.#getActionsFromNotes(skill.system.notes, `skill-${id}`)
 
 					this.addActions(
 						[
 							{
 								id,
-								name: `${e.name} (${e.level})`,
-								encodedValue: `@${this.actor.id}@Sk:${q + e.name + q}`,
+								name: displayItem.fullName,
+								encodedValue: displayItem.otf.level,
 								system: { actionType, actionId: id },
 							},
 							...notes,
@@ -530,6 +549,10 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 						list
 					)
 				}
+			}
+
+			this.actor.system.skillsV2.forEach((skill: any) => {
+				addActionsForSkill(skill)
 			})
 		}
 
@@ -542,27 +565,26 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 			const uncategorizedList = { id: "spells_uncategorized", name: "Uncategorized", type: "system" }
 			this.addGroup(uncategorizedList, rootList)
 
-			if (Object.keys(this.actor.system.spells).length === 0) return
+			const addActionsForSpell = (spell: any) => {
+				const id = spell.id
 
-			GURPS.recurselist(this.actor.system.spells, (e: any, _k: string, _d: any) => {
-				const q = e.name.includes('"') ? "'" : '"'
-				const id = e.uuid
-
-				const isContainer = Object.keys(e.contains).length > 0 || e.level === ""
-
-				if (isContainer) {
-					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : rootList
-					this.addGroup({ id, name: e.name, type: "system" }, list, true)
+				if (spell.system.isContainer) {
+					const list = spell.system.containedBy ? { id: spell.system.containedBy, type: "system" } : rootList
+					this.addGroup({ id, name: spell.name, type: "system" }, list, true)
+					spell.system.children.forEach((childSpell: any) => {
+						addActionsForSpell(childSpell)
+					})
 				} else {
-					const list = e.parentuuid !== "" ? { id: e.parentuuid, type: "system" } : uncategorizedList
-					const notes = this.#getActionsFromNotes(e.notes, `spell-${id}`)
+					const displayItem = spell.system.toDisplayItem()
+					const list = spell.system.containedBy ? { id: spell.system.containedBy, type: "system" } : uncategorizedList
+					const notes = this.#getActionsFromNotes(spell.system.notes, `spell-${id}`)
 
 					this.addActions(
 						[
 							{
 								id,
-								name: `${e.name} (${e.level})`,
-								encodedValue: `@${this.actor.id}@Sp:${q + e.name + q}`,
+								name: displayItem.fullName,
+								encodedValue: displayItem.otf.level,
 								system: { actionType, actionId: id },
 							},
 							...notes,
@@ -570,6 +592,10 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 						list
 					)
 				}
+			}
+
+			this.actor.system.spellsV2.forEach((spell: any) => {
+				addActionsForSpell(spell)
 			})
 		}
 
@@ -578,46 +604,36 @@ Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 		#buildEquipmentActions(): void {
 			const actionType = ACTION_TYPE.otf
 
-			if (
-				Object.keys(this.actor.system.equipment.carried).length === 0 &&
-				Object.keys(this.actor.system.equipment.other).length === 0
-			)
-				return
-
-			GURPS.recurselist(this.actor.system.equipment.carried, (e: any, k: string, _d: string) => {
-				const actions = this.#getActionsFromNotes(e.notes, `equipment-carried-${k}`)
+			this.actor.system.allEquipmentCarried.forEach((equipment: any) => {
+				const id = `equipment-carried-${equipment.id}`
+				const actions = this.#getActionsFromNotes(equipment.system.notes, id)
 
 				if (actions.length > 0) {
-					const id = `equipment-carried-${k}`
-
-					console.log(id)
-
-					this.addGroup({ id, name: e.name, type: "system" }, { id: "equipment", type: "system" }, true)
+					this.addGroup({ id, name: equipment.name, type: "system" }, { id: "equipments", type: "system" }, true)
 					this.addActions(
-						actions.map(action => ({
+						actions.map((action: any) => ({
 							...action,
 							id: `${id}-${action.id}`,
 							system: { actionType, actionId: `${id}-${action.id}` },
 						})),
-						{ id, name: e.name, type: "system" }
+						{ id, name: equipment.name, type: "system" }
 					)
 				}
 			})
 
-			GURPS.recurselist(this.actor.system.equipment.other, (e: any, k: string, _d: string) => {
-				const actions = this.#getActionsFromNotes(e.notes, `equipment-other-${k}`)
+			this.actor.system.allEquipmentOther.forEach((equipment: any) => {
+				const id = `equipment-other-${equipment.id}`
+				const actions = this.#getActionsFromNotes(equipment.system.notes, id)
 
 				if (actions.length > 0) {
-					const id = `equipment-other-${k}`
-
-					this.addGroup({ id, name: e.name, type: "system" }, { id: "equipment", type: "system" }, true)
+					this.addGroup({ id, name: equipment.name, type: "system" }, { id: "equipments", type: "system" }, true)
 					this.addActions(
-						actions.map(action => ({
+						actions.map((action: any) => ({
 							...action,
 							id: `${id}-${action.id}`,
 							system: { actionType, actionId: `${id}-${action.id}` },
 						})),
-						{ id, name: e.name, type: "system" }
+						{ id, name: equipment.name, type: "system" }
 					)
 				}
 			})
