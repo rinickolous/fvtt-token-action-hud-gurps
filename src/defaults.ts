@@ -1,15 +1,14 @@
-import { GROUP } from "./constants.js"
+import { GROUP } from "./constants.ts"
 
-/**
- * Default layout and groups
- */
-export let DEFAULTS = null
+export let DEFAULTS: any = null
 
-Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
+/* ---------------------------------------- */
+
+Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 	const groups = GROUP
 	Object.values(groups).forEach(group => {
 		group.name = coreModule.api.Utils.i18n(group.name)
-		group.listName = `Group: ${coreModule.api.Utils.i18n(group.listName ?? group.name)}`
+		;(group as any).listName = `Group: ${coreModule.api.Utils.i18n((group as any).listName ?? group.name)}`
 	})
 	const groupsArray = Object.values(groups)
 	DEFAULTS = {
@@ -34,8 +33,8 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				type: "system",
 				groups: [
 					{ ...groups.dodges, nestId: "defenses_dodges" },
-					{ ...groups.parries, nestId: "defenses_parries" },
-					{ ...groups.blocks, nestId: "defenses_blocks" },
+					{ ...(groups as any).parries, nestId: "defenses_parries" },
+					{ ...(groups as any).blocks, nestId: "defenses_blocks" },
 				],
 			},
 			{

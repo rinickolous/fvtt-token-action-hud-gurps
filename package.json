@@ -5,29 +5,35 @@
 	},
 	"description": "Token Action HUD is a repositionable HUD of actions for a selected token.",
 	"devDependencies": {
-		"@babel/core": "^7.27.4",
-		"@babel/eslint-parser": "^7.27.1",
-		"@rollup/plugin-multi-entry": "^6.0.0",
-		"@rollup/plugin-terser": "^0.4.4",
-		"eslint": "^8.25.0",
-		"eslint-config-prettier": "^10.1.8",
-		"eslint-config-standard": "^17.0.0",
-		"eslint-plugin-import": "^2.26.0",
-		"eslint-plugin-n": "^15.3.0",
-		"eslint-plugin-promise": "^6.1.0",
+		"fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
+		"@typescript-eslint/eslint-plugin": "^8.0.0",
+		"@typescript-eslint/parser": "^8.0.0",
+		"@types/node": "^20.0.0",
+		"eslint": "^9.0.0",
+		"eslint-config-prettier": "^10.0.0",
+		"eslint-plugin-prettier": "^5.0.0",
+		"globals": "^15.0.0",
 		"prettier": "^3.5.3",
-		"rollup": "^2.56.3"
+		"typescript": "^5.0.0",
+		"typescript-eslint": "^8.0.0",
+		"vite": "^8.0.3",
+		"vite-plugin-checker": "^0.12.0",
+		"vite-plugin-static-copy": "^4.0.0"
 	},
 	"license": "GPL-3.0-or-later",
 	"name": "token-action-hud-gurps",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/rinickolous/token-action-hud-gurps.git"
+		"url": "git+https://github.com/rinickolous/fvtt-token-action-hud-gurps.git"
 	},
 	"scripts": {
-		"build": "rollup -cm",
-		"dev": "rollup -wcm"
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"typecheck": "tsc --noEmit"
 	},
-	"tpype": "module",
-	"version": "1.3.0"
+	"engines": {
+		"node": ">=20"
+	},
+	"type": "module",
+	"version": "2.0.0"
 }

@@ -31,14 +31,12 @@ jobs:
       # Run build
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
       - run: npm install
       - run: npm run build
 
-      # Create a "module.zip" archive containing all the module's required files.
-      # If you have other directories or files that will need to be added to
-      # your packaged module, add them here.
-      - run: zip -r ./module.zip module.json readme.md LICENSE icons/ languages/ scripts/token-action-hud-gurps.min.js* styles/
+      # Create a "module.zip" archive from the dist folder (which contains all built assets).
+      - run: cp readme.md LICENSE dist/ && cd dist && zip -r ../module.zip . && cd ..
 
       # Update the GitHub release with the manifest and module archive files.
       - name: Update Release with Files

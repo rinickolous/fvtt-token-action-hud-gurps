@@ -1,11 +1,6 @@
-import { MODULE } from "./constants.js"
+import { MODULE } from "./constants.ts"
 
-/**
- * Register module settings
- * Called by Token Action HUD Core to register Token Action HUD system module settings
- * @param {function} coreUpdate Token Action HUD Core update function
- */
-export function register(coreUpdate) {
+export function register(coreUpdate: any): void {
 	game.settings.register(MODULE.ID, "displayUnequipped", {
 		name: game.i18n.localize("tokenActionHud.gurps.settings.displayUnequipped.name"),
 		hint: game.i18n.localize("tokenActionHud.gurps.settings.displayUnequipped.hint"),

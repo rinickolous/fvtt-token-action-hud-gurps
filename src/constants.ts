@@ -1,25 +1,19 @@
-/**
- * Module-based constants
- */
 export const MODULE = {
-	ID: "token-action-hud-gurps",
+	ID: "token-action-hud-gurps" as const,
 }
 
-/**
- * Core module
- */
+/* ---------------------------------------- */
+
 export const CORE_MODULE = {
 	ID: "token-action-hud-core",
 }
 
-/**
- * Core module version required by the system module
- */
+/* ---------------------------------------- */
+
 export const REQUIRED_CORE_MODULE_VERSION = "2.1"
 
-/**
- * Action types
- */
+/* ---------------------------------------- */
+
 export const ACTION_TYPE = {
 	attribute: "tokenActionHud.gurps.attribute",
 	otf: "tokenActionHud.gurps.otf",
@@ -27,9 +21,8 @@ export const ACTION_TYPE = {
 	utility: "tokenActionHud.utility",
 }
 
-/**
- * Groups
- */
+/* ---------------------------------------- */
+
 export const GROUP = {
 	attributes: { id: "attributes", name: "tokenActionHud.gurps.attributes", type: "system" },
 	conditionalModifiers: {
@@ -54,14 +47,6 @@ export const GROUP = {
 	utility: { id: "utility", name: "tokenActionHud.utility", type: "system" },
 }
 
-/**
- * Item types
- */
-export const ITEM_TYPE = {
-	// armor: { groupId: 'armor' },
-	// backpack: { groupId: 'containers' },
-	// consumable: { groupId: 'consumables' },
-	// equipment: { groupId: 'equipment' },
-	// treasure: { groupId: 'treasure' },
-	// weapon: { groupId: 'weapons' },
-}
+/* ---------------------------------------- */
+
+export const ITEM_TYPE = {}

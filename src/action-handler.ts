@@ -1,31 +1,16 @@
-// System Module Imports
-import { ACTION_TYPE } from "./constants.js"
+import { ACTION_TYPE } from "./constants.ts"
 
-export let ActionHandler = null
+export let ActionHandler: any = null
 
-Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
-	/**
-	 * Extends Token Action HUD Core's ActionHandler class and builds system-defined actions for the HUD
-	 */
+Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 	ActionHandler = class ActionHandler extends coreModule.api.ActionHandler {
-		/**
-		 * Build system actions
-		 * Called by Token Action HUD Core
-		 * @override
-		 * @param {array} groupIds
-		 */
-		async buildSystemActions(_groupIds) {
-			// If the GURPS global is not initialized, return early
+		async buildSystemActions(_groupIds: string[]): Promise<void> {
 			if (!GURPS) return
 
-			// Set actor and token variables
-			// this.actors = this.actor ? [this.actor] : []
 			this.actorType = this.actor?.type
 
-			// Set items variable
 			if (this.actor) {
-				let items = this.actor.items
-				this.items = items
+				this.items = this.actor.items
 			}
 
 			if (this.actorType === "character" || this.actorType === "enemy") {
@@ -37,11 +22,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/**
-		 * Build character actions
-		 * @private
-		 */
-		async #buildCharacterActions() {
+		async #buildCharacterActions(): Promise<void> {
 			this.#buildAttributeActions()
 			this.#buildDefenseActions()
 			this.#buildMeleeActions()
@@ -57,19 +38,11 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/**
-		 * Build multiple token actions
-		 * @private
-		 * @returns {object}
-		 */
-		#buildMultipleTokenActions() {}
+		#buildMultipleTokenActions(): void {}
 
 		/* ---------------------------------------- */
 
-		/** Build attribute actions
-		 * @private
-		 */
-		#buildAttributeActions() {
+		#buildAttributeActions(): void {
 			this.#buildAttributeRollActions()
 			this.#buildPoolModifierActions()
 			this.#buildSenseActions()
@@ -79,10 +52,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build defense actions
-		 *
-		 * */
-		#buildDefenseActions() {
+		#buildDefenseActions(): void {
 			const actionType = ACTION_TYPE.otf
 
 			const dodges = [
@@ -102,7 +72,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 			this.addActions(dodges, { id: "dodges", type: "system" })
 
-			GURPS.recurselist(this.actor.system.melee, (e, k, _d) => {
+			GURPS.recurselist(this.actor.system.melee, (e: any, k: string, _d: any) => {
 				const q = e.name.includes('"') ? "'" : '"'
 				const usage = e.mode ? ` (${e.mode})` : ""
 				const name = `${e.name}${usage}`
@@ -181,32 +151,35 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		#buildAttributeRollActions() {
+		#buildAttributeRollActions(): void {
 			const actionType = ACTION_TYPE.attribute
 
-			const useQuintessence = game.settings?.get("gurps", "use-quintessence") === true
+			const useQuintessence = (game.settings?.get("gurps", "use-quintessence") as unknown as boolean) === true
 
-			const attributeActions = Object.entries(this.actor.system.attributes).reduce((acc, [key, value]) => {
-				if (key.toLowerCase() === "qn" && !useQuintessence) return acc
+			const attributeActions = Object.entries(this.actor.system.attributes).reduce(
+				(acc: any[], [key, value]: [string, any]) => {
+					if (key.toLowerCase() === "qn" && !useQuintessence) return acc
 
-				acc.push({
-					id: key,
-					name: `${key} (${value.value})`,
-					listName: `LIST ${key}`,
-					system: { actionType, actionId: key },
-				})
+					acc.push({
+						id: key,
+						name: `${key} (${value.value})`,
+						listName: `LIST ${key}`,
+						system: { actionType, actionId: key },
+					})
 
-				return acc
-			}, [])
+					return acc
+				},
+				[]
+			)
 			this.addActions(attributeActions, { id: "attributes", type: "system" })
 		}
 
 		/* ---------------------------------------- */
 
-		#buildPoolModifierActions() {
+		#buildPoolModifierActions(): void {
 			const actionType = ACTION_TYPE.otf
 
-			function getModifierActions(key, _value) {
+			function getModifierActions(key: string, _value: any): any[] {
 				return [
 					{
 						id: `increase-${key}`,
@@ -225,11 +198,11 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				]
 			}
 
-			const poolModifierActions = []
+			const poolModifierActions: any[] = []
 			poolModifierActions.push(...getModifierActions("hp", this.actor.system.HP))
 			poolModifierActions.push(...getModifierActions("fp", this.actor.system.FP))
 
-			if (game.settings?.get("gurps", "use-quintessence") === true) {
+			if ((game.settings?.get("gurps", "use-quintessence") as unknown as boolean) === true) {
 				poolModifierActions.push(...getModifierActions("qp", this.actor.system.QP))
 			}
 
@@ -238,17 +211,17 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		#buildSenseActions() {
+		#buildSenseActions(): void {
 			const actionType = ACTION_TYPE.otf
 
-			const senses = {
+			const senses: Record<string, any> = {
 				vision: this.actor.system.vision,
 				hearing: this.actor.system.hearing,
 				tasteSmell: this.actor.system.tastesmell,
 				touch: this.actor.system.touch,
 			}
 
-			const senseActions = Object.entries(senses).reduce((acc, [key, value]) => {
+			const senseActions = Object.entries(senses).reduce((acc: any[], [key, value]) => {
 				const name = coreModule.api.Utils.i18n("tokenActionHud.gurps." + key)
 				acc.push({
 					id: key,
@@ -265,16 +238,13 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build reaction actions
-		 * @private
-		 */
-		#buildReactionActions() {
+		#buildReactionActions(): void {
 			if (!this.actor.system.reactions || Object.keys(this.actor.system.reactions).length === 0) return
 
 			const actionType = ACTION_TYPE.otf
-			const reactions = []
+			const reactions: any[] = []
 
-			GURPS.recurselist(this.actor.system.reactions, (e, k, _d) => {
+			GURPS.recurselist(this.actor.system.reactions, (e: any, k: string, _d: any) => {
 				if (isNaN(parseInt(e.modifier))) return
 				const modifier = parseInt(e.modifier) > 0 ? `+${e.modifier}` : e.modifier
 
@@ -291,16 +261,13 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build reaction actions
-		 * @private
-		 */
-		#buildConditionalModifierActions() {
+		#buildConditionalModifierActions(): void {
 			if (!this.actor.system.conditionalmods || Object.keys(this.actor.system.conditionalmods).length === 0) return
 
 			const actionType = ACTION_TYPE.otf
-			const conditionalModifiers = []
+			const conditionalModifiers: any[] = []
 
-			GURPS.recurselist(this.actor.system.conditionalmods, (e, k, _d) => {
+			GURPS.recurselist(this.actor.system.conditionalmods, (e: any, k: string, _d: any) => {
 				if (isNaN(parseInt(e.modifier))) return
 				const modifier = parseInt(e.modifier) > 0 ? `+${e.modifier}` : e.modifier
 
@@ -317,15 +284,12 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build melee attack actions
-		 * @private
-		 */
-		#buildMeleeActions() {
+		#buildMeleeActions(): void {
 			if (Object.keys(this.actor.system.melee).length === 0) return
 
 			const actionType = ACTION_TYPE.otf
 
-			GURPS.recurselist(this.actor.system.melee, (e, k, _d) => {
+			GURPS.recurselist(this.actor.system.melee, (e: any, k: string, _d: any) => {
 				const q = e.name.includes('"') ? "'" : '"'
 				const usage = e.mode ? ` (${e.mode})` : ""
 				const name = `${e.name}${usage}`
@@ -395,15 +359,12 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build ranged attack actions
-		 * @private
-		 * */
-		#buildRangedActions() {
+		#buildRangedActions(): void {
 			if (Object.keys(this.actor.system.ranged).length === 0) return
 
 			const actionType = ACTION_TYPE.otf
 
-			GURPS.recurselist(this.actor.system.ranged, (e, k, _d) => {
+			GURPS.recurselist(this.actor.system.ranged, (e: any, k: string, _d: any) => {
 				const q = e.name.includes('"') ? "'" : '"'
 				const usage = e.mode ? ` (${e.mode})` : ""
 				const name = `${e.name}${usage}`
@@ -475,20 +436,16 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Get actions from notes
-		 * @returns {array} The actions
-		 * @private
-		 */
-		#getActionsFromNotes(notes, prefix) {
-			const actions = []
+		#getActionsFromNotes(notes: string, prefix: string): any[] {
+			const actions: any[] = []
 
 			if (notes && notes.length > 0) {
-				GURPS.gurpslink(notes, false, true).forEach(action => {
+				GURPS.gurpslink(notes, false, true).forEach((action: any) => {
 					const id = `${prefix}-note-${actions.length}`
 
 					const parser = new DOMParser()
 					const doc = parser.parseFromString(action.text, "text/html")
-					const text = doc.body.firstChild.innerText
+					const text = (doc.body.firstChild as HTMLElement)?.innerText
 
 					actions.push({
 						id,
@@ -508,23 +465,19 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build trait actions
-		 * @private
-		 */
-		#buildTraitActions() {
+		#buildTraitActions(): void {
 			const actionType = ACTION_TYPE.otf
 
 			if (Object.keys(this.actor.system.ads).length === 0) return
 
-			GURPS.recurselist(this.actor.system.ads, (e, k, _d) => {
+			GURPS.recurselist(this.actor.system.ads, (e: any, k: string, _d: any) => {
 				const actions = this.#getActionsFromNotes(e.notes, `trait-${k}`)
-
 				if (actions.length > 0) {
 					const id = `trait-${k}`
 
 					this.addGroup({ id, name: e.name, type: "system" }, { id: "traits", type: "system" }, true)
 					this.addActions(
-						actions.map(action => ({
+						actions.map((action: any) => ({
 							...action,
 							id: `${id}-${action.id}`,
 							system: { actionType, actionId: `${id}-${action.id}` },
@@ -537,10 +490,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build skill actions
-		 * @private
-		 */
-		#buildSkillActions() {
+		#buildSkillActions(): void {
 			const actionType = ACTION_TYPE.otf
 
 			const rootList = { id: "skills", type: "system" }
@@ -554,7 +504,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 			if (Object.keys(this.actor.system.skills).length === 0) return
 
-			GURPS.recurselist(this.actor.system.skills, (e, _k, _d) => {
+			GURPS.recurselist(this.actor.system.skills, (e: any, _k: string, _d: any) => {
 				const q = e.name.includes('"') ? "'" : '"'
 				const id = e.uuid
 
@@ -585,10 +535,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build spell actions
-		 * @private
-		 */
-		#buildSpellActions() {
+		#buildSpellActions(): void {
 			const actionType = ACTION_TYPE.otf
 
 			const rootList = { id: "spells", type: "system" }
@@ -597,7 +544,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 			if (Object.keys(this.actor.system.spells).length === 0) return
 
-			GURPS.recurselist(this.actor.system.spells, (e, _k, _d) => {
+			GURPS.recurselist(this.actor.system.spells, (e: any, _k: string, _d: any) => {
 				const q = e.name.includes('"') ? "'" : '"'
 				const id = e.uuid
 
@@ -628,10 +575,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build equipment actions
-		 * @private
-		 */
-		#buildEquipmentActions() {
+		#buildEquipmentActions(): void {
 			const actionType = ACTION_TYPE.otf
 
 			if (
@@ -640,7 +584,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 			)
 				return
 
-			GURPS.recurselist(this.actor.system.equipment.carried, (e, k, _d) => {
+			GURPS.recurselist(this.actor.system.equipment.carried, (e: any, k: string, _d: string) => {
 				const actions = this.#getActionsFromNotes(e.notes, `equipment-carried-${k}`)
 
 				if (actions.length > 0) {
@@ -660,7 +604,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 				}
 			})
 
-			GURPS.recurselist(this.actor.system.equipment.other, (e, k, _d) => {
+			GURPS.recurselist(this.actor.system.equipment.other, (e: any, k: string, _d: string) => {
 				const actions = this.#getActionsFromNotes(e.notes, `equipment-other-${k}`)
 
 				if (actions.length > 0) {
@@ -681,10 +625,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/** Build skill actions
-		 * @private
-		 */
-		#buildQuickNoteActions() {
+		#buildQuickNoteActions(): void {
 			const rootList = { id: "quickNotes", type: "system" }
 			const uncategorizedList = {
 				id: "quickNotes_uncategorized",
@@ -699,10 +640,10 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		#buildManeuverActions() {
+		#buildManeuverActions(): void {
 			if (!this.actor.inCombat) return
 
-			const actions = Object.entries(GURPS.Maneuvers.getAllData()).map(([id, maneuver]) => {
+			const actions = Object.entries(GURPS.Maneuvers.getAllData()).map(([id, maneuver]: [string, any]) => {
 				const name = coreModule.api.Utils.i18n(maneuver.label)
 
 				return {
@@ -722,8 +663,8 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		#buildPostureActions() {
-			const actions = Object.entries(GURPS.StatusEffect.getAllPostures()).map(([id, posture]) => {
+		#buildPostureActions(): void {
+			const actions = Object.entries(GURPS.StatusEffect.getAllPostures()).map(([id, posture]: [string, any]) => {
 				return {
 					id: `posture-${id}`,
 					name: coreModule.api.Utils.i18n(posture.name),

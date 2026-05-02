@@ -1,2 +1,2 @@
-node_modules/*
-*.min.*
+node_modules/
+dist/

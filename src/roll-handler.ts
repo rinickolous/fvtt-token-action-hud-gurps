@@ -1,20 +1,10 @@
-import { ACTION_TYPE } from "./constants.js"
+import { ACTION_TYPE } from "./constants.ts"
 
-export let RollHandler = null
+export let RollHandler: any = null
 
-Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
-	/**
-	 * Extends Token Action HUD Core's RollHandler class and handles action events triggered when an action is clicked
-	 */
+Hooks.once("tokenActionHudCoreApiReady", async (coreModule: any) => {
 	RollHandler = class RollHandler extends coreModule.api.RollHandler {
-		/**
-		 * Handle action click
-		 * Called by Token Action HUD Core when an action is left or right-clicked
-		 * @override
-		 * @param {object} event        The event
-		 * @param {string} encodedValue The encoded value
-		 */
-		async handleActionClick(event, encodedValue) {
+		async handleActionClick(event: any, encodedValue: string): Promise<void> {
 			const { actionType, actionId } = this.action.system
 
 			const encodedValues = encodedValue?.split("|") ?? []
@@ -31,29 +21,22 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		/**
-		 * Handle action hover
-		 * Called by Token Action HUD Core when an action is hovered on or off
-		 * @override
-		 * @param {object} event        The event
-		 * @param {string} encodedValue The encoded value
-		 */
-		async handleActionHover(_event, _encodedValue) {}
+		async handleActionHover(_event: any, _encodedValue: string): Promise<void> {}
 
 		/* ---------------------------------------- */
 
-		/**
-		 * Handle group click
-		 * Called by Token Action HUD Core when a group is right-clicked while the HUD is locked
-		 * @override
-		 * @param {object} event The event
-		 * @param {object} group The group
-		 */
-		async handleGroupClick(_event, _group) {}
+		async handleGroupClick(_event: any, _group: any): Promise<void> {}
 
 		/* ---------------------------------------- */
 
-		async #handleAction(event, actionType, actor, _token, actionId, encodedValues = []) {
+		async #handleAction(
+			event: any,
+			actionType: string,
+			actor: any,
+			_token: any,
+			actionId: string,
+			encodedValues: string[] = []
+		): Promise<void> {
 			switch (actionType) {
 				case ACTION_TYPE.attribute:
 					await this.#rollAttribute(event, actor, actionId)
@@ -70,7 +53,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		async #rollAttribute(event, actor, attributeId) {
+		async #rollAttribute(event: any, actor: any, attributeId: string): Promise<void> {
 			await GURPS.performAction(
 				{
 					attribute: attributeId,
@@ -89,7 +72,7 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 
 		/* ---------------------------------------- */
 
-		async #rollOTF(event, actor, encodedValues, rightClickDamage = false) {
+		async #rollOTF(event: any, actor: any, encodedValues: string[], rightClickDamage = false): Promise<void> {
 			if (rightClickDamage && event.type === "contextmenu") {
 				const otfText = encodedValues[0]
 
