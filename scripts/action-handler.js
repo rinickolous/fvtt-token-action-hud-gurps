@@ -702,13 +702,13 @@ Hooks.once("tokenActionHudCoreApiReady", async coreModule => {
 		#buildManeuverActions() {
 			if (!this.actor.inCombat) return
 
-			const actions = Object.entries(GURPS.Maneuvers.getAllData()).map(([id, maneuver]) => {
+			const actions = Object.entries(GURPS.Maneuvers.getAllInPlayData()).map(([id, maneuver]) => {
 				const name = coreModule.api.Utils.i18n(maneuver.label)
 
 				return {
 					id: `maneuver-${id}`,
 					name,
-					img: maneuver.icon,
+					img: maneuver.img ?? maneuver.icon,
 					encodedValue: `@${this.actor.id}@ /man ${name}`,
 					system: {
 						actionType: ACTION_TYPE.otf,
